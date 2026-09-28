@@ -1,0 +1,254 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1820" width="100%" height="100%">
+  <defs>
+    <!-- Arrowhead Marker -->
+    <marker id="chalk-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#e8ece9" />
+    </marker>
+    <!-- Amber Marker -->
+    <marker id="amber-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#e5c07b" />
+    </marker>
+  </defs>
+ 
+  <style>
+    .bg { fill: #1c2624; }
+    .title { font-family: 'Consolas', 'Courier New', monospace; font-size: 24px; font-weight: bold; fill: #ffffff; letter-spacing: 2px; }
+    .subtitle { font-family: 'Consolas', 'Courier New', monospace; font-size: 13px; fill: #e5c07b; font-style: italic; }
+    .tier-header { font-family: 'Consolas', 'Courier New', monospace; font-size: 14px; font-weight: bold; letter-spacing: 1px; }
+    .box-title { font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; font-weight: bold; }
+    .box-desc { font-family: 'Consolas', 'Courier New', monospace; font-size: 11px; fill: #c0cac7; }
+    .meta-text { font-family: 'Consolas', 'Courier New', monospace; font-size: 10px; fill: #8a9c97; }
+    .chalk-line { stroke: #e8ece9; stroke-width: 1.5; stroke-dasharray: 6,4; fill: none; }
+    .chalk-border { stroke: #4f635e; stroke-width: 1.5; stroke-dasharray: 4,3; fill: #22302d; }
+    .node-border { stroke: #6b827c; stroke-width: 1.2; fill: #17201e; }
+    .node-border-amber { stroke: #e5c07b; stroke-width: 1.2; stroke-dasharray: 5,3; fill: #17201e; }
+    .node-border-blue { stroke: #61afef; stroke-width: 1.2; stroke-dasharray: 5,3; fill: #17201e; }
+    .node-border-green { stroke: #98c379; stroke-width: 1.2; stroke-dasharray: 5,3; fill: #17201e; }
+    .connector { stroke: #e8ece9; stroke-width: 1.2; fill: none; marker-end: url(#chalk-arrow); }
+    .connector-amber { stroke: #e5c07b; stroke-width: 1.2; fill: none; marker-end: url(#amber-arrow); }
+  </style>
+ 
+  <!-- Blackboard Canvas Background -->
+  <rect width="900" height="1820" class="bg" />
+ 
+  <!-- Chalkboard Outer Vignette Border -->
+  <rect x="20" y="20" width="860" height="1780" fill="none" stroke="#2e3f3b" stroke-width="3" />
+  <rect x="26" y="26" width="848" height="1768" fill="none" stroke="#4f635e" stroke-width="1.5" stroke-dasharray="8,5" />
+ 
+  <!-- ==================== HEADER ==================== -->
+  <g transform="translate(50, 45)">
+    <text x="400" y="30" text-anchor="middle" class="title">AEGIS WIN11: HARDENED WORKSTATION ARCHITECTURE</text>
+    <text x="400" y="55" text-anchor="middle" class="subtitle">Deterministic Low-Latency Systems Engineering &amp; Zero-Trust Device Foundation</text>
+    <line x1="20" y1="75" x2="780" y2="75" stroke="#4f635e" stroke-width="1.5" stroke-dasharray="6,4" />
+    <text x="400" y="92" text-anchor="middle" class="meta-text">Target: Windows 11 Enterprise (x64) 22H2-24H2 | Baseline v1.7.5 | Author: Moosehead Studio</text>
+  </g>
+ 
+  <!-- ==================== TIER 1: PHYSICAL STORAGE ==================== -->
+  <g transform="translate(50, 165)">
+    <rect x="0" y="0" width="800" height="280" rx="4" class="chalk-border" />
+    <text x="20" y="25" class="tier-header" fill="#98c379">[TIER 1: PHYSICAL STORAGE &amp; WINPE FORMAT ALIGNMENT]</text>
+    <text x="780" y="25" text-anchor="end" class="meta-text">Layer: Hardware Abstraction</text>
+ 
+    <!-- Node 1.1 -->
+    <rect x="25" y="45" width="225" height="120" rx="3" class="node-border-green" />
+    <text x="35" y="68" class="box-title" fill="#98c379">WinPE 4Kn Alignment</text>
+    <text x="35" y="90" class="box-desc">BlockAllocationSize = 4096</text>
+    <text x="35" y="108" class="box-desc">1:1 Logical to Physical Page</text>
+    <text x="35" y="126" class="box-desc">RMW Penalty Eliminated</text>
+    <text x="35" y="144" class="box-desc">NAND Flash Life Extended</text>
+ 
+    <!-- Node 1.2 -->
+    <rect x="285" y="45" width="230" height="120" rx="3" class="node-border" />
+    <text x="295" y="68" class="box-title" fill="#e8ece9">stornvme Latency Lock</text>
+    <text x="295" y="90" class="box-desc">IdleTimeout = 0 (No Polling)</text>
+    <text x="295" y="108" class="box-desc">EnableD3 = 0 (State D0 Hot)</text>
+    <text x="295" y="126" class="box-desc">NtfsDisableLastAccess = 1</text>
+    <text x="295" y="144" class="box-desc">NtfsDisable8dot3 = 1</text>
+ 
+    <!-- Node 1.3 -->
+    <rect x="550" y="45" width="225" height="120" rx="3" class="node-border-amber" />
+    <text x="560" y="68" class="box-title" fill="#e5c07b">Hardware BitLocker</text>
+    <text x="560" y="90" class="box-desc">XTS-AES-256 (Method 7)</text>
+    <text x="560" y="108" class="box-desc">Gated on 4096B Validation</text>
+    <text x="560" y="126" class="box-desc">TPM 2.0 PCR Protection</text>
+    <text x="560" y="144" class="box-desc">Panther Key Vault Stored</text>
+ 
+    <!-- Intra-Tier Bottom Note -->
+    <rect x="25" y="180" width="750" height="80" rx="3" class="node-border" />
+    <text x="35" y="202" class="box-title" fill="#e5c07b">WinRE Recovery Mirroring (Push-Button Reset Engine)</text>
+    <text x="35" y="222" class="box-desc">Staged ResetConfig.xml &amp; ResetDiskLayout.txt in C:\Recovery\OEM\</text>
+    <text x="35" y="240" class="box-desc">Enforces format quick fs=ntfs unit=4096 on bare-metal factory wipe cycles</text>
+  </g>
+ 
+  <!-- Connector Tier 1 -> Tier 2 -->
+  <path d="M 450 445 L 450 475" class="connector" />
+ 
+  <!-- ==================== TIER 2: SILICON IDENTITY ==================== -->
+  <g transform="translate(50, 480)">
+    <rect x="0" y="0" width="800" height="260" rx="4" class="chalk-border" />
+    <text x="20" y="25" class="tier-header" fill="#e5c07b">[TIER 2: SILICON IDENTITY &amp; CREDENTIAL ORCHESTRATION]</text>
+    <text x="780" y="25" text-anchor="end" class="meta-text">Layer: Local Root-of-Trust</text>
+ 
+    <!-- Node 2.1 -->
+    <rect x="25" y="45" width="225" height="185" rx="3" class="node-border" />
+    <text x="35" y="68" class="box-title" fill="#e8ece9">Silicon Telemetry Hash</text>
+    <text x="35" y="95" class="box-desc">1. Query Win32_Bios Serial</text>
+    <text x="35" y="115" class="box-desc">2. Fallback: UUID + MAC</text>
+    <text x="35" y="135" class="box-desc">3. SHA-256 Cryptographic Hash</text>
+    <text x="35" y="155" class="box-desc">4. 6-Char Anchor Extraction</text>
+    <text x="35" y="175" class="box-desc">Target: Unique Silicon ID</text>
+    <text x="35" y="205" class="meta-text">Output: $StickerID Token</text>
+ 
+    <!-- Node 2.2 -->
+    <rect x="285" y="45" width="230" height="185" rx="3" class="node-border-amber" />
+    <text x="295" y="68" class="box-title" fill="#e5c07b">Dynamic Local Admin</text>
+    <text x="295" y="95" class="box-desc">User: MHS-$StickerID-Admin</text>
+    <text x="295" y="115" class="box-desc">Pass: 24-Char RNGCrypto</text>
+    <text x="295" y="135" class="box-desc">Force Change on 1st Logon</text>
+    <text x="295" y="155" class="box-desc">RID-500 Admin: DISABLED</text>
+    <text x="295" y="175" class="box-desc">Aegis_Bootstrap_Secret.txt</text>
+    <text x="295" y="205" class="meta-text">No Default Static Passwords</text>
+ 
+    <!-- Node 2.3 -->
+    <rect x="550" y="45" width="225" height="185" rx="3" class="node-border" />
+    <text x="560" y="68" class="box-title" fill="#e8ece9">Privilege &amp; UAC Boundary</text>
+    <text x="560" y="95" class="box-desc">ConsentPromptAdmin = 1</text>
+    <text x="560" y="115" class="box-desc">PromptOnSecureDesktop = 1</text>
+    <text x="560" y="135" class="box-desc">ValidateAdminSignatures = 1</text>
+    <text x="560" y="155" class="box-desc">LocalAccountTokenFilter:</text>
+    <text x="560" y="175" class="box-desc">Gated by Dynamic SAM Check</text>
+    <text x="560" y="205" class="meta-text">Blocks Lateral Movement</text>
+  </g>
+ 
+  <!-- Connector Tier 2 -> Tier 3 -->
+  <path d="M 450 740 L 450 770" class="connector" />
+ 
+  <!-- ==================== TIER 3: KERNEL VIRTUALIZATION ==================== -->
+  <g transform="translate(50, 775)">
+    <rect x="0" y="0" width="800" height="260" rx="4" class="chalk-border" />
+    <text x="20" y="25" class="tier-header" fill="#e8ece9">[TIER 3: KERNEL VIRTUALIZATION &amp; EXPLOIT MITIGATION]</text>
+    <text x="780" y="25" text-anchor="end" class="meta-text">Layer: Ring -1 / Ring 0</text>
+ 
+    <!-- Node 3.1 -->
+    <rect x="25" y="45" width="225" height="185" rx="3" class="node-border" />
+    <text x="35" y="68" class="box-title" fill="#e8ece9">Hypervisor Isolation</text>
+    <text x="35" y="95" class="box-desc">Virtualization-Based Security</text>
+    <text x="35" y="115" class="box-desc">HVCI Enforced (Ring -1)</text>
+    <text x="35" y="135" class="box-desc">LSASS RunAsPPL = 1</text>
+    <text x="35" y="155" class="box-desc">Memory Scraping Blocked</text>
+    <text x="35" y="175" class="box-desc">Credential Guard Base</text>
+    <text x="35" y="205" class="meta-text">Zero Unrestricted RAM Read</text>
+ 
+    <!-- Node 3.2 -->
+    <rect x="285" y="45" width="230" height="185" rx="3" class="node-border-green" />
+    <text x="295" y="68" class="box-title" fill="#98c379">WDAC Driver Blocklist</text>
+    <text x="295" y="95" class="box-desc">VulnerableDriverBlocklist = 1</text>
+    <text x="295" y="115" class="box-desc">BYOVD Exploit Mitigation</text>
+    <text x="295" y="135" class="box-desc">Blocks Vulnerable Signed</text>
+    <text x="295" y="155" class="box-desc">Retains Unsigned Audio VSTs</text>
+    <text x="295" y="175" class="box-desc">Preserves Riot / EAC / FaceIt</text>
+    <text x="295" y="205" class="meta-text">No Strict Driver Whitelist Break</text>
+ 
+    <!-- Node 3.3 -->
+    <rect x="550" y="45" width="225" height="185" rx="3" class="node-border" />
+    <text x="560" y="68" class="box-title" fill="#e8ece9">Exploit Guard &amp; ASR</text>
+    <text x="560" y="95" class="box-desc">System DEP, SEHOP Enforced</text>
+    <text x="560" y="115" class="box-desc">BottomUpASLR Active</text>
+    <text x="560" y="135" class="box-desc">MandatoryASLR OMITTED</text>
+    <text x="560" y="155" class="box-desc">14 ASR Rules in BLOCK Mode</text>
+    <text x="560" y="175" class="box-desc">Controlled Folder: AuditMode</text>
+    <text x="560" y="205" class="meta-text">DAW / CAD Execution Safe</text>
+  </g>
+ 
+  <!-- Connector Tier 3 -> Tier 4 -->
+  <path d="M 450 1035 L 450 1065" class="connector" />
+ 
+  <!-- ==================== TIER 4: NETWORK FORTRESS ==================== -->
+  <g transform="translate(50, 1070)">
+    <rect x="0" y="0" width="800" height="260" rx="4" class="chalk-border" />
+    <text x="20" y="25" class="tier-header" fill="#61afef">[TIER 4: NETWORK FORTRESS &amp; PROTOCOL INTEGRITY]</text>
+    <text x="780" y="25" text-anchor="end" class="meta-text" fill="#61afef">100% STANDALONE MILESTONE</text>
+ 
+    <!-- Node 4.1 -->
+    <rect x="25" y="45" width="225" height="185" rx="3" class="node-border-blue" />
+    <text x="35" y="68" class="box-title" fill="#61afef">Broadcast Poisoning Drop</text>
+    <text x="35" y="95" class="box-desc">EnableMulticast = 0 (LLMNR)</text>
+    <text x="35" y="115" class="box-desc">NetbiosOptions = 2 (NetBT)</text>
+    <text x="35" y="135" class="box-desc">EnableLMHOSTS = 0</text>
+    <text x="35" y="155" class="box-desc">SmartNameResolution = 1</text>
+    <text x="35" y="175" class="box-desc">Mitigates Responder Attacks</text>
+    <text x="35" y="205" class="meta-text">Zero Multicast Leakage</text>
+ 
+    <!-- Node 4.2 -->
+    <rect x="285" y="45" width="230" height="185" rx="3" class="node-border" />
+    <text x="295" y="68" class="box-title" fill="#e8ece9">Remote Vector Severance</text>
+    <text x="295" y="95" class="box-desc">WebClient Service: DISABLED</text>
+    <text x="295" y="115" class="box-desc">No Remote WebDAV Redirection</text>
+    <text x="295" y="135" class="box-desc">DisableHTTPPrinting = 1</text>
+    <text x="295" y="155" class="box-desc">WinRM Encrypted Traffic Only</text>
+    <text x="295" y="175" class="box-desc">RPC RestrictRemoteClients=1</text>
+    <text x="295" y="205" class="meta-text">Unauthenticated RPC Banned</text>
+ 
+    <!-- Node 4.3 -->
+    <rect x="550" y="45" width="225" height="185" rx="3" class="node-border" />
+    <text x="560" y="68" class="box-title" fill="#e8ece9">SMB Transport Security</text>
+    <text x="560" y="95" class="box-desc">SMBv1 Feature REMOVED</text>
+    <text x="560" y="115" class="box-desc">RequireSecuritySignature = 1</text>
+    <text x="560" y="135" class="box-desc">LmCompatibilityLevel = 5</text>
+    <text x="560" y="155" class="box-desc">Refuses Legacy LM / NTLM</text>
+    <text x="560" y="175" class="box-desc">SMB Encryption: OFF (10GbE)</text>
+    <text x="560" y="205" class="meta-text">Max NAS Streaming Bandwidth</text>
+  </g>
+ 
+  <!-- Connector Tier 4 -> Tier 5 -->
+  <path d="M 450 1330 L 450 1360" class="connector" />
+ 
+  <!-- ==================== TIER 5: RUNTIME & LIFECYCLE ==================== -->
+  <g transform="translate(50, 1365)">
+    <rect x="0" y="0" width="800" height="340" rx="4" class="chalk-border" />
+    <text x="20" y="25" class="tier-header" fill="#98c379">[TIER 5: WORKLOAD ISOLATION &amp; LIFECYCLE MANAGEMENT]</text>
+    <text x="780" y="25" text-anchor="end" class="meta-text">Layer: User Space / Apps</text>
+ 
+    <!-- Node 5.1 -->
+    <rect x="25" y="45" width="225" height="180" rx="3" class="node-border-green" />
+    <text x="35" y="68" class="box-title" fill="#98c379">Surgical Audio &amp; DPC</text>
+    <text x="35" y="95" class="box-desc">DisableAllSoundEffects = 1</text>
+    <text x="35" y="115" class="box-desc">Global APO Processing Off</text>
+    <text x="35" y="135" class="box-desc">DRM PlayReady / PMP Intact</text>
+    <text x="35" y="155" class="box-desc">Zero Buffer Underruns</text>
+    <text x="35" y="175" class="box-desc">Direct ASIO Hardware Path</text>
+    <text x="35" y="205" class="meta-text">Focusrite / UAD / RME Ready</text>
+ 
+    <!-- Node 5.2 -->
+    <rect x="285" y="45" width="230" height="180" rx="3" class="node-border" />
+    <text x="295" y="68" class="box-title" fill="#e8ece9">Option A AppX Blacklist</text>
+    <text x="295" y="95" class="box-desc">Purges Consumer Bloat Stubs</text>
+    <text x="295" y="115" class="box-desc">Online Provisioning Cleared</text>
+    <text x="295" y="135" class="box-desc">Preserves Microsoft.UI.Xaml</text>
+    <text x="295" y="155" class="box-desc">Preserves SecHealthUI Defender</text>
+    <text x="295" y="175" class="box-desc">Preserves DesktopAppInstaller</text>
+    <text x="295" y="205" class="meta-text">Zero Shell Interface Lockups</text>
+ 
+    <!-- Node 5.3 -->
+    <rect x="550" y="45" width="225" height="180" rx="3" class="node-border" />
+    <text x="560" y="68" class="box-title" fill="#e8ece9">Persistent BT A2DP Task</text>
+    <text x="560" y="95" class="box-desc">Aegis_BtMonitor.ps1 Task</text>
+    <text x="560" y="115" class="box-desc">Monitors BTHPORT Devices</text>
+    <text x="560" y="135" class="box-desc">HandsFree Telephony Disabled</text>
+    <text x="560" y="155" class="box-desc">Forces High-Quality A2DP</text>
+    <text x="560" y="175" class="box-desc">Weekly DDF / CSP Log Purge</text>
+    <text x="560" y="205" class="meta-text">Continuous Background Loop</text>
+ 
+    <!-- Node 5.4 / Winget & Browser Row -->
+    <rect x="25" y="240" width="750" height="80" rx="3" class="node-border" />
+    <text x="35" y="262" class="box-title" fill="#61afef">Automated Package Provisioning &amp; Enterprise Browser GPO</text>
+    <text x="35" y="282" class="box-desc">Winget Execution: VSCode, Terminal, Cascadia, Brave, VLC, NanaZip, 1Password, DirectX, VC++ Runtimes</text>
+    <text x="35" y="300" class="box-desc">Edge &amp; Brave GPO: DNS-over-HTTPS, Encrypted Client Hello (ECH), Strict 3rd-Party Tracking Blockade</text>
+  </g>
+ 
+  <!-- ==================== FOOTER ==================== -->
+  <g transform="translate(50, 1750)">
+    <line x1="20" y1="0" x2="780" y2="0" stroke="#4f635e" stroke-width="1.5" stroke-dasharray="6,4" />
+    <text x="400" y="22" text-anchor="middle" class="meta-text">Moosehead Studio Production Architecture | Deterministic Baseline | Non-Destructive Zero-Trust</text>
+  </g>
+</svg>
