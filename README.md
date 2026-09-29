@@ -72,7 +72,7 @@ Deployment occurs across three discrete execution boundaries coordinated through
 INSTALLER_USB:
 └───autounattend.xml
 └───sources
-    └───OEMOEM
+    └───OEM
         └───$1
             └───Aegis
                 └───AegisWin11_Deploy.ps1
