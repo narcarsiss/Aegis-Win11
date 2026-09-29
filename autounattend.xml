@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+===========================================================================================
+HARDENED WINDOWS 11 UNATTENDED DEPLOYMENT SCHEMA (autounattend.xml)
+===========================================================================================
+Deployment Target : Windows 11 Enterprise / Pro (amd64)
+Organization      : Moosehead Studio
+Version           : 1.8.0
+Regional Baseline : Australia (en-AU) / DD-MM-YYYY Date Format / US Keyboard Layout (0409)
+Execution Flow    : windowsPE -> specialize -> oobeSystem -> FirstLogonCommands
+
+CRITICAL HARDWARE DEPLOYMENT NOTICE (DISK 0 PURGE WARNING):
+The DiskConfiguration pass below targets DiskID 0 with <WillWipeDisk>true</WillWipeDisk>.
+On systems containing multiple physical storage interfaces (mixed PCIe NVMe and SATA AHCI),
+verify that the target high-speed NVMe SSD enumerates as Disk 0 within the UEFI BIOS prior
+to installation, or physically disconnect secondary SATA data cables during initial staging.
+
+STAGING PREREQUISITE:
+The post-OOBE orchestrator script must be staged on the deployment media at:
+  USB:\sources\$OEM$\$1\Aegis\AegisWin11_Deploy.ps1
+Windows Setup automatically mirrors sources\$OEM$\$1\ to %SystemDrive% (C:\), allowing 
+FirstLogonCommands to execute C:\Aegis\AegisWin11_Deploy.ps1 under full bypass context.
+===========================================================================================
+-->
+<unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+
+    <!-- PASS 1: windowsPE -->
+    <settings pass="windowsPE">
+        <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <SetupUILanguage>
+                <UILanguage>en-US</UILanguage>
+            </SetupUILanguage>
+            <InputLocale>0409:00000409</InputLocale>
+            <SystemLocale>en-AU</SystemLocale>
+            <UILanguage>en-US</UILanguage>
+            <UserLocale>en-AU</UserLocale>
+        </component>
+
+        <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <DiskConfiguration>
+                <Disk wcm:action="add">
+                    <DiskID>0</DiskID>
+                    <WillWipeDisk>true</WillWipeDisk>
+                    <CreatePartitions>
+                        <!-- Partition 1: Windows Recovery Environment (WinRE) -->
+                        <CreatePartition wcm:action="add">
+                            <Order>1</Order>
+                            <Type>Primary</Type>
+                            <Size>1000</Size>
+                        </CreatePartition>
+                        <!-- Partition 2: EFI System Partition (300MB for 4Kn Native Physical Sizing) -->
+                        <CreatePartition wcm:action="add">
+                            <Order>2</Order>
+                            <Type>EFI</Type>
+                            <Size>300</Size>
+                        </CreatePartition>
+                        <!-- Partition 3: Microsoft Reserved Partition (MSR) -->
+                        <CreatePartition wcm:action="add">
+                            <Order>3</Order>
+                            <Type>MSR</Type>
+                            <Size>16</Size>
+                        </CreatePartition>
+                        <!-- Partition 4: Windows Operating System Volume -->
+                        <CreatePartition wcm:action="add">
+                            <Order>4</Order>
+                            <Type>Primary</Type>
+                            <Extend>true</Extend>
+                        </CreatePartition>
+                    </CreatePartitions>
+                    <ModifyPartitions>
+                        <!-- Format WinRE -->
+                        <ModifyPartition wcm:action="add">
+                            <Order>1</Order>
+                            <PartitionID>1</PartitionID>
+                            <Format>NTFS</Format>
+                            <Label>WinRE</Label>
+                            <TypeID>DE94BBA4-06D1-4D40-A16A-BFD50179D6AC</TypeID>
+                        </ModifyPartition>
+                        <!-- Format EFI -->
+                        <ModifyPartition wcm:action="add">
+                            <Order>2</Order>
+                            <PartitionID>2</PartitionID>
+                            <Format>FAT32</Format>
+                            <Label>System</Label>
+                        </ModifyPartition>
+                        <!-- Format OS Volume: Deterministic 4096-Byte Hardware Page Alignment -->
+                        <ModifyPartition wcm:action="add">
+                            <Order>4</Order>
+                            <PartitionID>4</PartitionID>
+                            <Format>NTFS</Format>
+                            <Label>Aegis_OS</Label>
+                            <Letter>C</Letter>
+                            <BlockAllocationSize>4096</BlockAllocationSize>
+                        </ModifyPartition>
+                    </ModifyPartitions>
+                </Disk>
+            </DiskConfiguration>
+            <UserData>
+                <ProductKey>
+                    <Key></Key>
+                    <WillShowUI>OnError</WillShowUI>
+                </ProductKey>
+                <AcceptEula>true</AcceptEula>
+                <FullName>System Administrator</FullName>
+                <Organization>Moosehead Studio</Organization>
+            </UserData>
+        </component>
+    </settings>
+
+    <!-- PASS 2: specialize -->
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ComputerName>*</ComputerName>
+            <TimeZone>UTC</TimeZone>
+            <RegisteredOwner>Moosehead Studio</RegisteredOwner>
+            <RegisteredOrganization>Moosehead Studio</RegisteredOrganization>
+        </component>
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>1</Order>
+                    <Description>Enforce Global Default User Account Picture</Description>
+                    <Path>cmd.exe /c reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v UseDefaultTile /t REG_DWORD /d 1 /f 1&gt;nul 2&gt;nul</Path>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+        </component>
+    </settings>
+
+    <!-- PASS 3: oobeSystem -->
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <OOBE>
+                <HideEULAPage>true</HideEULAPage>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+                <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
+                <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+                <ProtectYourPC>3</ProtectYourPC>
+                <SkipMachineOOBE>true</SkipMachineOOBE>
+                <SkipUserOOBE>true</SkipUserOOBE>
+            </OOBE>
+
+            <AutoLogon>
+                <Enabled>true</Enabled>
+                <Username>Administrator</Username>
+                <LogonCount>1</LogonCount>
+                <Password>
+                    <Value>AegisTempPass123!</Value>
+                    <PlainText>true</PlainText>
+                </Password>
+            </AutoLogon>
+
+            <UserAccounts>
+                <AdministratorPassword>
+                    <Value>AegisTempPass123!</Value>
+                    <PlainText>true</PlainText>
+                </AdministratorPassword>
+                <LocalAccounts>
+                    <LocalAccount wcm:action="add">
+                        <Name>Administrator</Name>
+                        <DisplayName>Administrator</DisplayName>
+                        <Description>Temporary Staging Account - Disabled Post-Provisioning</Description>
+                        <Group>Administrators</Group>
+                        <Password>
+                            <Value>AegisTempPass123!</Value>
+                            <PlainText>true</PlainText>
+                        </Password>
+                    </LocalAccount>
+                </LocalAccounts>
+            </UserAccounts>
+
+            <FirstLogonCommands>
+                <SynchronousCommand wcm:action="add">
+                    <Order>1</Order>
+                    <CommandLine>powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Aegis\AegisWin11_Deploy.ps1"</CommandLine>
+                    <Description>Execute AegisWin11 Master Pipeline</Description>
+                </SynchronousCommand>
+            </FirstLogonCommands>
+        </component>
+    </settings>
+</unattend>
