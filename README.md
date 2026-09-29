@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/Aegis11VBanner.jpg" alt="Aegis Win11 Github Banner" width="220" />
+  <img src="assets/AgeisLogo.jpeg" alt="Aegis Win11 Logo" width="500" />
 </p>
 
 <h1 align="center">Aegis Win11 Enterprise Deployment Toolkit</h1>
