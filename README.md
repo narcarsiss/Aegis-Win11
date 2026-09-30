@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/AgeisLogo.jpeg" alt="Aegis Win11 Logo" width="500" />
+  <img src="/assets/aegis-crystal-floor.png" alt="Aegis Win11 Logo" width="500" />
 </p>
 
 <h1 align="center">Aegis Win11 Enterprise Deployment Toolkit</h1>
@@ -25,7 +25,7 @@ Standard OS stripping scripts regularly induce system failures by severing manda
 ## 2. Systems Architecture Blueprint
 
 <p align="center">
-  <img src="assets/AgeisArchitecture.svg" alt="Aegis Win11 Systems Architecture" width="100%" />
+  <img src="assets/aegis-architecture-flow.png" alt="Aegis Win11 Systems Architecture" width="100%" />
 </p>
 
 ---
