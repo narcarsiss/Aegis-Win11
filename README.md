@@ -1,5 +1,6 @@
+
 <p align="center">
-  <img src="/assets/aegis-crystal-floor.png" alt="Aegis Win11 Logo" width="500" />
+  <img src="/assets/aegis-crystal-floor.png" alt="Aegis Win11 Logo" width="480" />
 </p>
 
 <h1 align="center">Aegis Win11 Enterprise Deployment Toolkit</h1>
@@ -7,10 +8,38 @@
 <p align="center"><b>Deterministic Low-Latency Systems Engineering &amp; Zero-Trust Device Foundation</b></p>
 
 <p align="center">
-  <a href="https://github.com/narcarsiss/Aegis-Win11/releases/tag/v1.8.0"><img src="https://img.shields.io/badge/Release-v1.8.0-0078D4?style=for-the-badge" alt="Release v1.8.0" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License MIT" /></a>
-  <a href="https://github.com/narcarsiss/Aegis-Win11/wiki"><img src="https://img.shields.io/badge/Wiki-Documentation-2EA44F?style=for-the-badge" alt="Wiki" /></a>
+  <a href="https://github.com/narcarsiss/Aegis-Win11/releases/tag/v1.8.0">
+    <img src="https://img.shields.io/badge/Release-v1.8.0-334155?style=for-the-badge&labelColor=1E293B&logo=github&logoColor=white" alt="Release v1.8.0" /></a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-334155?style=for-the-badge&labelColor=1E293B" alt="License MIT" /></a>
+  <a href="https://github.com/narcarsiss/Aegis-Win11/wiki">
+    <img src="https://img.shields.io/badge/Wiki-Documentation-334155?style=for-the-badge&labelColor=1E293B&logo=gitbook&logoColor=white" alt="Wiki" /></a>
+  <a href="https://www.microsoft.com/windows/">
+    <img src="https://img.shields.io/badge/Platform-Windows%2011-334155?style=for-the-badge&labelColor=1E293B&logo=windows11&logoColor=white" alt="Platform Windows 11" /></a>
+  <a href="https://learn.microsoft.com/powershell/">
+    <img src="https://img.shields.io/badge/Runtime-PowerShell%205.1%2B-334155?style=for-the-badge&labelColor=1E293B&logo=powershell&logoColor=white" alt="PowerShell 5.1+" /></a>
+  <a href="#4-cis-benchmark--nist-compliance-posture">
+    <img src="https://img.shields.io/badge/Compliance-CIS,%20NIST-334155?style=for-the-badge&labelColor=1E293B" alt="CIS Benchmark v9.0.0" /></a>
+  <a href="autounattend.xml">
+    <img src="https://img.shields.io/badge/Arch-x64%20%2F%20AMD64-334155?style=for-the-badge&labelColor=1E293B" alt="Architecture x64" /></a>
 </p>
+
+---
+
+<details>
+<summary><strong>Table of Contents (Click to Expand)</strong></summary>
+
+- [1. Architectural Overview](#1-Architectural-Overview)
+- [2. Systems Architecture Blueprint](#2-Systems-Architecture-Blueprint)
+- [3. Workload Compatibility & Boundary Matrix](#3-Workload-Compatibility-&-Boundary-Matrix)
+- [4. CIS Benchmark & NIST Compliance Posture](#4-CIS-Benchmark-&-NIST-Compliance-Posture)
+- [5. Staging & Unattended Deployment Topology](#6-Staging-&-Unattended-Deployment-Topology)
+- [6. Parameter Reference](#7-Parameter-Reference)
+- [7. Subsystem Implementations](#8-Subsystem-Implementations)
+- [8. Verification & Diagnostic Auditing](#9-Verification-&-Diagnostic-Auditing)
+- [9. Community & Technical Support](#10-Community-&-Technical-Support)
+- [10. License](#11-License)
+</details>
 
 ---
 
@@ -30,7 +59,8 @@ Standard OS stripping scripts regularly induce system failures by severing manda
 
 ---
 
-## 3. Workload Compatibility & Boundary Matrix
+<details>
+<summary><strong>## 3. Workload Compatibility & Boundary Matrix</strong></summary>
 
 Every policy within Aegis Win11 is evaluated against four non-negotiable operational workstation targets:
 
@@ -38,10 +68,12 @@ Every policy within Aegis Win11 is evaluated against four non-negotiable operati
 *   **Computer-Aided Design (CAD) & Rendering Suites:** Maintains nested directory depths via NTFS Long Paths (`LongPathsEnabled = 1`), disables NTFS timestamp write operations (`NtfsDisableLastAccessUpdate = 1`), disables 8.3 short filename generation (`NtfsDisable8dot3NameCreation = 1`), and enforces Hardware-Accelerated GPU Scheduling (HAGS) for applications including Autodesk Revit, AutoCAD, Blender, and Adobe Creative Cloud.
 *   **Competitive Gaming & Anti-Cheat Runtimes:** Omits strict kernel-mode code integrity policies (`CodeIntegrityPolicy = 1`) and system-wide Mandatory ASLR, ensuring compatibility with kernel-level anti-cheat platforms (Riot Vanguard, Easy Anti-Cheat, BattlEye) and local gaming clients (Steam, Epic Games).
 *   **Enterprise Suites & Identity Management:** Supports both standalone workstation topologies and enterprise domains via Microsoft Entra ID / Local Administrator Password Solution (LAPS) integration toggles, preserving Windows Remote Management (WinRM) and modern Kerberos/NTLMv2 authentication pathways.
+</details>
 
 ---
 
-## 4. CIS Benchmark & NIST Compliance Posture
+<details>
+<summary><strong>## 4. CIS Benchmark & NIST Compliance Posture</strong></summary>
 
 Aegis Win11 aligns with technical controls from the Center for Internet Security (CIS) Microsoft Windows 11 Enterprise Benchmark (v3.0.0) and NIST SP 800-53 Rev 5 / NIST SP 800-171 Rev 2.
 
@@ -61,10 +93,12 @@ To maintain credibility during external audits and peer review, the framework do
 3.  **Controlled Folder Access (CIS 18.10.43.4.2):** Defaulted to `AuditMode`. Enforcing CFA in `Block` mode stops creative software (FL Studio, Ableton, Autodesk) and game runtimes from writing legitimate save states, scratch files, and presets to `%USERPROFILE%\Documents`.
 4.  **Network Protocol Binding (IPv6):** IPv6 adapter bindings remain active. Microsoft core networking identifies IPv6 as a mandatory OS component; disabling IPv6 breaks Teredo gaming discovery, Entra ID hybrid join state sync, and WinRM listeners.
 5.  **SMB3 Payload Encryption (CIS 2.3.8.3):** Mandatory SMB payload encryption (`EncryptData = 1`) is omitted. Packet signing (`RequireSecuritySignature = 1`) is enforced to stop NTLM relay attacks, but payload encryption is withheld to avoid saturating workstation CPU cores during multi-gigabit media transfers across local NAS devices.
-
+</details>
+  
 ---
 
-## 5. Staging & Unattended Deployment Topology
+<details>
+<summary><strong>## 5. Staging & Unattended Deployment Topology</strong></summary>
 
 Deployment occurs across three discrete execution boundaries coordinated through `autounattend.xml` and staged PowerShell logic.
 
@@ -72,19 +106,21 @@ Deployment occurs across three discrete execution boundaries coordinated through
 INSTALLER_USB:
 └───autounattend.xml
 └───sources
-    └───OEM
+    └───$OEM$
         └───$1
             └───Aegis
                 └───AegisWin11_Deploy.ps1
 ```
 
 > [!WARNING]
-> ### Clean Disk 0 Partitioning Notice
-> The baseline `autounattend.xml` includes automated disk partitioning with `<WillWipeDisk>` set to `$true` on `<DiskID>` set as `0`. On systems with multiple storage drives, ensure the target installation drive enumerates as Disk 0 in the UEFI BIOS prior to boot, or disconnect/disable secondary SATA/AHCI drives upon initial staging.
-
+> Deploying `autounattend.xml` with automated disk partitioning (`WipeDisk=true`) destroys all existing volume data on Disk 0. Ensure target machine data is backed up and BitLocker recovery keys are escrowed before boot media execution.
+> Ensure the target installation drive enumerates as Disk 0 in the UEFI BIOS prior to boot, or disconnect/disable secondary SATA/AHCI drives upon initial staging.
+</details>
+  
 ---
 
-## 6. Parameter Reference (`AegisWin11_Deploy.ps1`)
+<details>
+<summary><strong>## 6. Parameter Reference (`AegisWin11_Deploy.ps1`)</strong></summary>
 
 | Parameter | Type | Default | Operational Impact |
 | :--- | :--- | :--- | :--- |
@@ -106,10 +142,12 @@ INSTALLER_USB:
 | `-AutoReboot` | Switch / Boolean | `$true` | Executes an automated reboot upon pipeline completion. If `$false`, pauses for operator interaction. |
 | `-ControlledFolderAccessMode` | String (`Disabled`, `Enabled`, `AuditMode`) | `"AuditMode"` | Configures Microsoft Defender Controlled Folder Access. Defaulted to `AuditMode` to prevent DAW/CAD save failures. |
 | `-DefaultSearchProvider` | String | `"duckduckgo"` | Sets the default search engine configuration across enterprise browsers. |
-
+</details>
+  
 ---
 
-## 7. Subsystem Implementations
+<details>
+<summary><strong>## 7. Subsystem Implementations</strong></summary>
 
 ### Hardware Identity Engine
 The framework dynamically provisions a unique, hardware-bound administrative anchor during installation:
@@ -133,10 +171,12 @@ The framework enforces an explicit, non-destructive consumer blacklist targeting
 
 ### Targeted Desktop Audit & Logs Delivery
 The deployment report (`Aegis_Deployment_Report.txt`) and a direct shortcut to `C:\Windows\Panther` (`Deployment_Logs.lnk`) are generated during finalization and staged in the Panther vault. A post-install first-logon dispatcher (`Aegis_PostLogon_Cleanup.ps1`) transfers these files directly onto the created administrator's desktop (`MHS-$StickerID-Admin`), ensuring full visibility while keeping public and unprivileged desktops clean.
-
+</details>
+  
 ---
 
-## 8. Verification & Diagnostic Auditing
+<details>
+<summary><strong>## 8. Verification & Diagnostic Auditing</strong></summary>
 
 Post-installation validation can be executed using elevated PowerShell diagnostic commands:
 
@@ -159,8 +199,10 @@ secedit.exe /export /cfg "$env:TEMP\secpol_verify.inf" /areas USER_RIGHTS /quiet
 Select-String -Path "$env:TEMP\secpol_verify.inf" -Pattern "SeNetworkLogonRight"
 Remove-Item -Path "$env:TEMP\secpol_verify.inf" -Force
 ```
-
+</details>
+  
 ---
+
 
 ## 9. Community & Technical Support
 
@@ -168,10 +210,9 @@ Remove-Item -Path "$env:TEMP\secpol_verify.inf" -Force
 *   **Technical Reference Manual:** [44-Item Policy Matrix](https://github.com/narcarsiss/Aegis-Win11/wiki/Technical-Reference-Manual)
 *   **Security Architecture Report:** [Formal Compliance Audit](https://github.com/narcarsiss/Aegis-Win11/wiki/Security-Architecture-&-Compliance-Report)
 *   **Community Discussions:** [GitHub Discussions](https://github.com/narcarsiss/Aegis-Win11/discussions)
-
+     
 ---
 
 ## 10. License
 
 Released by Moosehead Studio under the MIT License. See `LICENSE` for details.
-```
