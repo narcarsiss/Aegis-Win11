@@ -1,0 +1,76 @@
+name: "Workload Compatibility Issue (DAW, CAD, Anti-Cheat, NAS)"
+description: Report a failure in specialized production software (audio interfaces, 3D rendering, anti-cheat, or network storage).
+title: "[COMPATIBILITY]: "
+labels: ["status:needs-telemetry"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Aegis Win11 is engineered to maintain production compatibility across high-performance workloads. Use this form to report functional breakages caused by active hardening policies.
+
+  - type: dropdown
+    id: workload_domain
+    attributes:
+      label: Affected Workload Domain
+      description: Select the functional domain encountering operational degradation.
+      options:
+        - "Digital Audio Workstation (DAW) / ASIO Driver"
+        - "CAD / 3D Modeling / GPU Compute"
+        - "Competitive Gaming / Kernel Anti-Cheat"
+        - "Local Network Attached Storage (NAS) / File Sharing"
+        - "Developer Toolchain / CI/CD Automation"
+    validations:
+      required: true
+
+  - type: input
+    id: target_application
+    attributes:
+      label: Application and Hardware Model
+      description: Specify the exact software suite, version, and external hardware interface.
+      placeholder: "e.g., Ableton Live 12 + Focusrite Scarlett 18i20 USB (Driver v4.119.13)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: suspected_policy
+    attributes:
+      label: Suspected Hardening Subsystem
+      description: Identify which policy tier is suspected of causing the conflict.
+      options:
+        - "Defender Attack Surface Reduction (ASR Rules)"
+        - "Exploit Guard (DEP, Bottom-Up ASLR, SEHOP)"
+        - "Surgical Audio Tuning (DisableAllSoundEffects / APO Bypass)"
+        - "MMCSS Audio Task Scheduling Priorities"
+        - "Network Fortress (SMB3 Signing / NTLMv2 LmCompatibilityLevel)"
+        - "WDAC Vulnerable Driver Blocklist"
+        - "Unknown / Multiple Tiers"
+    validations:
+      required: true
+
+  - type: textarea
+    id: symptoms_observed
+    attributes:
+      label: Observed Symptoms & Latency Telemetry
+      description: Detail the exact failure mode (e.g., DPC latency spikes in LatencyMon, 0xC000007B crashes, Access Denied errors).
+      placeholder: Describe the behavior and include exact error codes.
+    validations:
+      required: true
+
+  - type: textarea
+    id: event_log_telemetry
+    attributes:
+      label: Event Viewer / Security Telemetry Excerpt
+      description: Paste relevant Event Viewer records (e.g., Defender Event ID 1121/1122 for ASR blocks, Event ID 4688, or system crash logs).
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: pre_checks
+    attributes:
+      label: Workload Verification Checks
+      options:
+        - label: "I have confirmed that the hardware and software function correctly on an unhardened Windows 11 installation."
+          required: true
+        - label: "I have verified that all OEM device drivers and firmware are fully updated."
+          required: true
