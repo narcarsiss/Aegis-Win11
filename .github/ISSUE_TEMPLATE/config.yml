@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Community Discussions & General Inquiries
+    url: https://github.com/narcarsiss/Aegis-Win11/discussions
+    about: Ask deployment questions, discuss configurations, or share workstation benchmarks.
+  - name: Feature Requests & Subsystem Proposals
+    url: https://github.com/narcarsiss/Aegis-Win11/discussions/categories/feature-requests-and-subsystem-proposals
+    about: Propose non-destructive tweaks or new baseline capabilities for peer review.
