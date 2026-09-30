@@ -1,0 +1,82 @@
+name: "Bug Report (Deployment or Script Defect)"
+description: Report an unhandled PowerShell exception, WinPE partitioning failure, or deployment error.
+title: "[BUG]: "
+labels: ["status:needs-telemetry"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue. Please provide accurate system telemetry so maintainers can reproduce the execution defect.
+
+  - type: dropdown
+    id: os_build
+    attributes:
+      label: Windows 11 Build Version
+      description: Select the target operating system build used during deployment.
+      options:
+        - "Windows 11 24H2 (Build 26100+)"
+        - "Windows 11 23H2 (Build 22631)"
+        - "Windows 11 22H2 (Build 22621)"
+        - "Windows 11 Insider Preview"
+    validations:
+      required: true
+
+  - type: input
+    id: hardware_spec
+    attributes:
+      label: Hardware Platform & Storage Subsystem
+      description: Specify CPU model (Intel vs. AMD Zen) and target drive bus (PCIe NVMe M.2 vs. SATA AHCI).
+      placeholder: "e.g., AMD Ryzen 9 7950X, Samsung 990 Pro PCIe Gen 4 NVMe (Disk 0)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment_pass
+    attributes:
+      label: Failure Execution Stage
+      description: Identify where the failure occurred.
+      options:
+        - "WinPE Partitioning / autounattend.xml"
+        - "OOBE FirstLogonCommands Bootstrap"
+        - "AegisWin11_Deploy.ps1 Runtime Execution"
+        - "Post-Reboot Identity / BitLocker Lockout"
+        - "Winget Application Provisioning"
+    validations:
+      required: true
+
+  - type: textarea
+    id: parameters_used
+    attributes:
+      label: Execution Parameters
+      description: List any non-default parameters passed to the script or modified in autounattend.xml.
+      placeholder: "e.g., -EnableAntiForensicMode $true -PurgeOneDrive $true"
+    validations:
+      required: false
+
+  - type: textarea
+    id: bug_description
+    attributes:
+      label: Defect Description
+      description: A clear and concise description of the failure mode.
+      placeholder: Describe what failed and include exact error messages or stop codes.
+    validations:
+      required: true
+
+  - type: textarea
+    id: log_telemetry
+    attributes:
+      label: Panther Deployment Log Excerpt
+      description: Paste relevant lines from C:\Windows\Panther\Aegis_Hardening.log or C:\Windows\Panther\Aegis_Deployment_Report.txt.
+      render: shell
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: verification_checks
+    attributes:
+      label: Mandatory Pre-Submission Checks
+      options:
+        - label: "I have verified that Disk 0 was the correct target drive during installation."
+          required: true
+        - label: "I have checked existing issues and discussions for duplicate reports."
+          required: true
