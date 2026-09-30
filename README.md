@@ -59,8 +59,8 @@ Standard OS stripping scripts regularly induce system failures by severing manda
 
 ---
 
-<details>
-<summary><strong>## 3. Workload Compatibility & Boundary Matrix</strong></summary>
+
+## 3. Workload Compatibility & Boundary Matrix
 
 Every policy within Aegis Win11 is evaluated against four non-negotiable operational workstation targets:
 
@@ -68,12 +68,12 @@ Every policy within Aegis Win11 is evaluated against four non-negotiable operati
 *   **Computer-Aided Design (CAD) & Rendering Suites:** Maintains nested directory depths via NTFS Long Paths (`LongPathsEnabled = 1`), disables NTFS timestamp write operations (`NtfsDisableLastAccessUpdate = 1`), disables 8.3 short filename generation (`NtfsDisable8dot3NameCreation = 1`), and enforces Hardware-Accelerated GPU Scheduling (HAGS) for applications including Autodesk Revit, AutoCAD, Blender, and Adobe Creative Cloud.
 *   **Competitive Gaming & Anti-Cheat Runtimes:** Omits strict kernel-mode code integrity policies (`CodeIntegrityPolicy = 1`) and system-wide Mandatory ASLR, ensuring compatibility with kernel-level anti-cheat platforms (Riot Vanguard, Easy Anti-Cheat, BattlEye) and local gaming clients (Steam, Epic Games).
 *   **Enterprise Suites & Identity Management:** Supports both standalone workstation topologies and enterprise domains via Microsoft Entra ID / Local Administrator Password Solution (LAPS) integration toggles, preserving Windows Remote Management (WinRM) and modern Kerberos/NTLMv2 authentication pathways.
-</details>
+
 
 ---
 
-<details>
-<summary><strong>## 4. CIS Benchmark & NIST Compliance Posture</strong></summary>
+
+## 4. CIS Benchmark & NIST Compliance Posture
 
 Aegis Win11 aligns with technical controls from the Center for Internet Security (CIS) Microsoft Windows 11 Enterprise Benchmark (v3.0.0) and NIST SP 800-53 Rev 5 / NIST SP 800-171 Rev 2.
 
@@ -93,12 +93,12 @@ To maintain credibility during external audits and peer review, the framework do
 3.  **Controlled Folder Access (CIS 18.10.43.4.2):** Defaulted to `AuditMode`. Enforcing CFA in `Block` mode stops creative software (FL Studio, Ableton, Autodesk) and game runtimes from writing legitimate save states, scratch files, and presets to `%USERPROFILE%\Documents`.
 4.  **Network Protocol Binding (IPv6):** IPv6 adapter bindings remain active. Microsoft core networking identifies IPv6 as a mandatory OS component; disabling IPv6 breaks Teredo gaming discovery, Entra ID hybrid join state sync, and WinRM listeners.
 5.  **SMB3 Payload Encryption (CIS 2.3.8.3):** Mandatory SMB payload encryption (`EncryptData = 1`) is omitted. Packet signing (`RequireSecuritySignature = 1`) is enforced to stop NTLM relay attacks, but payload encryption is withheld to avoid saturating workstation CPU cores during multi-gigabit media transfers across local NAS devices.
-</details>
+
   
 ---
 
 <details>
-<summary><strong>## 5. Staging & Unattended Deployment Topology</strong></summary>
+<summary><strong>5. Staging & Unattended Deployment Topology</strong></summary>
 
 Deployment occurs across three discrete execution boundaries coordinated through `autounattend.xml` and staged PowerShell logic.
 
@@ -111,16 +111,16 @@ INSTALLER_USB:
             └───Aegis
                 └───AegisWin11_Deploy.ps1
 ```
+</details>
 
-> [!WARNING]
+> [!WARNING]  
 > Deploying `autounattend.xml` with automated disk partitioning (`WipeDisk=true`) destroys all existing volume data on Disk 0. Ensure target machine data is backed up and BitLocker recovery keys are escrowed before boot media execution.
 > Ensure the target installation drive enumerates as Disk 0 in the UEFI BIOS prior to boot, or disconnect/disable secondary SATA/AHCI drives upon initial staging.
-</details>
   
 ---
 
 <details>
-<summary><strong>## 6. Parameter Reference (`AegisWin11_Deploy.ps1`)</strong></summary>
+<summary><strong>6. Parameter Reference (`AegisWin11_Deploy.ps1`)</strong></summary>
 
 | Parameter | Type | Default | Operational Impact |
 | :--- | :--- | :--- | :--- |
@@ -147,7 +147,7 @@ INSTALLER_USB:
 ---
 
 <details>
-<summary><strong>## 7. Subsystem Implementations</strong></summary>
+<summary><strong>7. Subsystem Implementations</strong></summary>
 
 ### Hardware Identity Engine
 The framework dynamically provisions a unique, hardware-bound administrative anchor during installation:
@@ -176,7 +176,7 @@ The deployment report (`Aegis_Deployment_Report.txt`) and a direct shortcut to `
 ---
 
 <details>
-<summary><strong>## 8. Verification & Diagnostic Auditing</strong></summary>
+<summary><strong>8. Verification & Diagnostic Auditing</strong></summary>
 
 Post-installation validation can be executed using elevated PowerShell diagnostic commands:
 
