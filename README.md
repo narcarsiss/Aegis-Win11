@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="/assets/aegis-crystal-floor.png" alt="Aegis Win11 Logo" width="480" />
+  <img src="assets/aegis-crystal-floor.png" alt="Aegis Win11 Logo" width="480" />
 </p>
 
 <h1 align="center">Aegis Win11 Enterprise Deployment Toolkit</h1>
@@ -18,8 +18,8 @@
     <img src="https://img.shields.io/badge/Platform-Windows%2011-334155?style=for-the-badge&labelColor=1E293B&logo=windows11&logoColor=white" alt="Platform Windows 11" /></a>
   <a href="https://learn.microsoft.com/powershell/">
     <img src="https://img.shields.io/badge/Runtime-PowerShell%205.1%2B-334155?style=for-the-badge&labelColor=1E293B&logo=powershell&logoColor=white" alt="PowerShell 5.1+" /></a>
-  <a href="#4-cis-benchmark--nist-compliance-posture">
-    <img src="https://img.shields.io/badge/Compliance-CIS,%20NIST-334155?style=for-the-badge&labelColor=1E293B" alt="CIS Benchmark v9.0.0" /></a>
+  <a href="#4-cis-benchmark-nist-compliance-posture">
+    <img src="https://img.shields.io/badge/Compliance-CIS,%20NIST-334155?style=for-the-badge&labelColor=1E293B" alt="CIS and NIST Compliance" /></a>
   <a href="autounattend.xml">
     <img src="https://img.shields.io/badge/Arch-x64%20%2F%20AMD64-334155?style=for-the-badge&labelColor=1E293B" alt="Architecture x64" /></a>
 </p>
@@ -29,16 +29,16 @@
 <details>
 <summary><strong>Table of Contents (Click to Expand)</strong></summary>
 
-- [1. Architectural Overview](#1-Architectural-Overview)
-- [2. Systems Architecture Blueprint](#2-Systems-Architecture-Blueprint)
-- [3. Workload Compatibility & Boundary Matrix](#3-Workload-Compatibility-&-Boundary-Matrix)
-- [4. CIS Benchmark & NIST Compliance Posture](#4-CIS-Benchmark-&-NIST-Compliance-Posture)
-- [5. Staging & Unattended Deployment Topology](#6-Staging-&-Unattended-Deployment-Topology)
-- [6. Parameter Reference](#7-Parameter-Reference)
-- [7. Subsystem Implementations](#8-Subsystem-Implementations)
-- [8. Verification & Diagnostic Auditing](#9-Verification-&-Diagnostic-Auditing)
-- [9. Community & Technical Support](#10-Community-&-Technical-Support)
-- [10. License](#11-License)
+- [1. Architectural Overview](#1-architectural-overview)
+- [2. Systems Architecture Blueprint](#2-systems-architecture-blueprint)
+- [3. Workload Compatibility & Boundary Matrix](#3-workload-compatibility-boundary-matrix)
+- [4. CIS Benchmark & NIST Compliance Posture](#4-cis-benchmark-nist-compliance-posture)
+- [5. Staging & Unattended Deployment Topology](#5-staging-unattended-deployment-topology)
+- [6. Parameter Reference](#6-parameter-reference)
+- [7. Subsystem Implementations](#7-subsystem-implementations)
+- [8. Verification & Diagnostic Auditing](#8-verification-diagnostic-auditing)
+- [9. Community & Technical Support](#9-community-technical-support)
+- [10. License](#10-license)
 </details>
 
 ---
@@ -59,7 +59,7 @@ Standard OS stripping scripts regularly induce system failures by severing manda
 
 ---
 
-
+<a id="3-workload-compatibility-boundary-matrix"></a>
 ## 3. Workload Compatibility & Boundary Matrix
 
 Every policy within Aegis Win11 is evaluated against four non-negotiable operational workstation targets:
@@ -72,7 +72,7 @@ Every policy within Aegis Win11 is evaluated against four non-negotiable operati
 
 ---
 
-
+<a id="4-cis-benchmark-nist-compliance-posture"></a>
 ## 4. CIS Benchmark & NIST Compliance Posture
 
 Aegis Win11 aligns with technical controls from the Center for Internet Security (CIS) Microsoft Windows 11 Enterprise Benchmark (v3.0.0) and NIST SP 800-53 Rev 5 / NIST SP 800-171 Rev 2.
@@ -97,6 +97,7 @@ To maintain credibility during external audits and peer review, the framework do
   
 ---
 
+<a id="5-staging-unattended-deployment-topology"></a>
 <details>
 <summary><strong>5. Staging & Unattended Deployment Topology</strong></summary>
 
@@ -119,6 +120,7 @@ INSTALLER_USB:
   
 ---
 
+<a id="6-parameter-reference"></a>
 <details>
 <summary><strong>6. Parameter Reference (`AegisWin11_Deploy.ps1`)</strong></summary>
 
@@ -146,6 +148,7 @@ INSTALLER_USB:
   
 ---
 
+<a id="7-subsystem-implementations"></a>
 <details>
 <summary><strong>7. Subsystem Implementations</strong></summary>
 
@@ -175,6 +178,7 @@ The deployment report (`Aegis_Deployment_Report.txt`) and a direct shortcut to `
   
 ---
 
+<a id="8-verification-diagnostic-auditing"></a>
 <details>
 <summary><strong>8. Verification & Diagnostic Auditing</strong></summary>
 
@@ -203,7 +207,7 @@ Remove-Item -Path "$env:TEMP\secpol_verify.inf" -Force
   
 ---
 
-
+<a id="9-community-technical-support"></a>
 ## 9. Community & Technical Support
 
 *   **Wiki Documentation:** [Aegis-Win11 Wiki](https://github.com/narcarsiss/Aegis-Win11/wiki)
@@ -213,6 +217,7 @@ Remove-Item -Path "$env:TEMP\secpol_verify.inf" -Force
      
 ---
 
+<a id="10-license"></a>
 ## 10. License
 
 Released by Moosehead Studio under the MIT License. See `LICENSE` for details.
