@@ -5,6 +5,21 @@ All notable changes to the Aegis Win11 Enterprise Deployment Toolkit are documen
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+ 
+## [1.8.1] - 2026
+### Added
+* Early FVE BitLocker Interception (`autounattend.xml`): Injected XTS-AES-256 policy keys (`EncryptionMethodWithXtsOs = 7`) during the `specialize` pass to intercept Windows 11 automatic device encryption during OOBE, eliminating multi-hour 128-bit re-encryption cycles on clean installations.
+* 4Kn Sector Alignment (`autounattend.xml`): Enforced deterministic 4096-byte block allocation sizing (`BlockAllocationSize=4096`) on OS volume formatting passes.
+* Settings Cloud Sync Suppression (`AegisWin11_Deploy.ps1`): Added enterprise GPO rules (`DisableSettingSync = 2`, `DisableSettingSyncUserOverride = 1`) to block Microsoft Account / Entra ID settings roaming post-deployment.
+* Dynamic OS Build Gating (`AegisWin11_Deploy.ps1`): Implemented version checks (`$OSBuild -ge 26100`) to bypass redundant DISM capability queries for natively excised components (WordPad, WMIC) and restrict Windows Recall suppression (`DisableRecallDataProviders`) to compatible builds.
+* Machine-Readable Telemetry Export (`AegisWin11_Deploy.ps1`): Serialized global deployment execution logs to JSON (`C:\Windows\Panther\Aegis_Deploy.json`) with persistent exemption rules during pre-reboot cleaning.
+* Post-Feature Update Drift Auditor (`Post-FeatureUpdate-Compare-AegisBase.ps1`): Introduced a standalone, read-only or interactive compliance script to compare live registry and security subsystems against the Aegis baseline following OS feature upgrades.
+
+### Changed
+* Identity Anchor Naming Compliance (`AegisWin11_Deploy.ps1`): Refactored the hardware-bound admin naming schema from `MHS-$StickerID-Admin` to `Aegis$StickerID` to strictly adhere to NetBIOS and SAM 20-character account ceilings.
+* Unattended Process Binding (`autounattend.xml`): Appended `-NonInteractive` to `FirstLogonCommands` execution parameters to ensure unhandled child exceptions terminate cleanly without stalling staging phases.
+
+---
 
 ## [1.8.0] - 2026
 
