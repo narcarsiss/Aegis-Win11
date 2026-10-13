@@ -48,10 +48,10 @@
 .PARAMETER AdminOnlyWingetPackages
     Specifies administrative utility packages deployed exclusively to elevated profiles.
 .EXAMPLE
-    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Aegis\AegisWin11_Deploy.ps1"
+    powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\Aegis\AegisWin11_Deploy.ps1"
 .NOTES
     Author: Damien John O'Brien / Moosehead Studio
-    Version: 1.8.0.0
+    Version: 1.8.1.0
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true)]
@@ -91,6 +91,7 @@ $global:AegisDeployLog = [System.Collections.Generic.List[PSCustomObject]]::new(
 $global:AegisStickerID = ""
 $global:AegisUniqueAdminName = ""
 $global:AegisSelectionMethod = ""
+$global:OSBuild = [System.Environment]::OSVersion.Version.Build
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentPrincipal = [Security.Principal.WindowsPrincipal]$CurrentIdentity
@@ -173,7 +174,8 @@ function Invoke-IdentityOrchestration {
         }
 
         $global:AegisStickerID = $StickerID
-        $UniqueAdminName = "MHS-$StickerID-Admin"
+        # Strict NetBIOS / SAM 20-Character Compliance: Aegis + 6-character StickerID = 11 Characters
+        $UniqueAdminName = "Aegis$StickerID"
         $global:AegisUniqueAdminName = $UniqueAdminName
         
         $RandomSecret = New-CryptographicPassword -Length 24
@@ -181,7 +183,7 @@ function Invoke-IdentityOrchestration {
 
         $ExistingUser = Get-LocalUser -Name $UniqueAdminName -ErrorAction SilentlyContinue
         if (-not $ExistingUser) {
-            New-LocalUser -Name $UniqueAdminName -Password $SecurePassword -Description "Moosehead Station Identity $StickerID" -PasswordNeverExpires:$false | Out-Null
+            New-LocalUser -Name $UniqueAdminName -Password $SecurePassword -Description "Aegis Workstation Anchor $StickerID" -PasswordNeverExpires:$false | Out-Null
             Add-LocalGroupMember -Group "Administrators" -Member $UniqueAdminName | Out-Null
             & net.exe user $UniqueAdminName /logonpasswordchg:yes | Out-Null
             Write-Log "Identity" "Provisioned dynamic hardware anchor user: $UniqueAdminName" "Success"
@@ -454,6 +456,19 @@ function Invoke-ZeroTrustSecurity {
             Write-Log "ZeroTrust" "BitLocker automatic device encryption suppressed per explicit parameter." "Warning"
         }
 
+        # Settings Cloud Sync Deactivation (v1.8.1): Eliminates post-deployment profile drift
+        $SettingSyncPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\SettingSync"
+        if (-not (Test-Path $SettingSyncPath)) { New-Item -Path $SettingSyncPath -Force | Out-Null }
+        Set-ItemProperty -Path $SettingSyncPath -Name "DisableSettingSync" -Value 2 -Type DWord -Force
+        Set-ItemProperty -Path $SettingSyncPath -Name "DisableSettingSyncUserOverride" -Value 1 -Type DWord -Force
+
+        # Windows Recall Data Providers Isolation (Build 26100+ Guard)
+        if ($global:OSBuild -ge 26100) {
+            $WindowsAiPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsAI"
+            if (-not (Test-Path $WindowsAiPath)) { New-Item -Path $WindowsAiPath -Force | Out-Null }
+            Set-ItemProperty -Path $WindowsAiPath -Name "DisableRecallDataProviders" -Value 1 -Type DWord -Force
+        }
+
         $lsaPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa'
         Set-ItemProperty -Path $lsaPath -Name 'LmCompatibilityLevel' -Value 5 -Type DWord -Force
         Set-ItemProperty -Path $lsaPath -Name 'LimitBlankPasswordUse' -Value 1 -Type DWord -Force
@@ -686,7 +701,8 @@ function Invoke-LegacyCapabilityEvacuation {
     try {
         Write-Log "CapabilityEvac" "Evacuating legacy components and unreferenced packages..." "Info"
         
-        if ($EvacuateLegacyCapabilities) {
+        # OS Build Gating (v1.8.1): Bypass DISM queries on Build 26100+ where WordPad is natively absent
+        if ($EvacuateLegacyCapabilities -and ($global:OSBuild -lt 26100)) {
             $CapabilitiesToRemove = @("Microsoft.Windows.WordPad*", "*VBScript*", "*WMIC*")
             foreach ($CapName in $CapabilitiesToRemove) {
                 Get-WindowsCapability -Online | Where-Object { $_.Name -like $CapName -and $_.State -eq "Installed" } | ForEach-Object {
@@ -697,6 +713,8 @@ function Invoke-LegacyCapabilityEvacuation {
 
             Disable-WindowsOptionalFeature -Online -FeatureName 'MicrosoftWindowsPowerShellV2Root' -NoRestart -ErrorAction SilentlyContinue | Out-Null
             Disable-WindowsOptionalFeature -Online -FeatureName 'MicrosoftWindowsPowerShellV2' -NoRestart -ErrorAction SilentlyContinue | Out-Null
+        } elseif ($EvacuateLegacyCapabilities) {
+            Write-Log "CapabilityEvac" "Build $($global:OSBuild) detected: Legacy capabilities natively removed by OS. Skipping DISM scan." "Info"
         }
 
         if ($PurgeOneDrive) {
@@ -842,6 +860,7 @@ if (`$CurrentUserName -like "$TargetAdminName*" -or (([Security.Principal.Window
     `$UserDesktop = [Environment]::GetFolderPath('Desktop')
     if (Test-Path `$UserDesktop) {
         Copy-Item -Path "$env:SystemDrive\Windows\Panther\Aegis_Deployment_Report.txt" -Destination "`$UserDesktop\Aegis_Deployment_Report.txt" -Force -ErrorAction SilentlyContinue
+        Copy-Item -Path "$env:SystemDrive\Windows\Panther\Aegis_Deploy.json" -Destination "`$UserDesktop\Aegis_Deploy.json" -Force -ErrorAction SilentlyContinue
         Copy-Item -Path "$env:SystemDrive\Windows\Panther\Deployment_Logs.lnk" -Destination "`$UserDesktop\Deployment_Logs.lnk" -Force -ErrorAction SilentlyContinue
     }
 }
@@ -874,7 +893,7 @@ Remove-Item -Path `$MyInvocation.MyCommand.Path -Force -ErrorAction SilentlyCont
         $TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
         Register-ScheduledTask -TaskName "Aegis_FirstLogon_ForensicCleanup" -Action $TaskAction -Trigger $TaskTrigger -Settings $TaskSettings -User "NT AUTHORITY\SYSTEM" -RunLevel Highest -Force | Out-Null
 
-        # Standard Pre-Reboot Hygiene (Always Clean Staging Artifacts)
+        # Standard Pre-Reboot Hygiene
         Write-Log "Finalization" "Executing pre-reboot temporary staging sanitization..." "Info"
         $PreRebootPaths = @(
             "C:\Windows\Temp\*",
@@ -895,11 +914,13 @@ Remove-Item -Path `$MyInvocation.MyCommand.Path -Force -ErrorAction SilentlyCont
             Remove-Item -Path "C:\Windows\Prefetch\*" -Recurse -Force -ErrorAction SilentlyContinue
         }
 
+        # Purge non-essential setup logs in Panther while exempting deployment telemetry (v1.8.1: JSON added)
         $ExemptFiles = @(
             "Aegis_Hardening.log",
             "Aegis_Bootstrap_Secret.txt",
             "Aegis_BitLocker_Recovery.txt",
             "Aegis_Deployment_Report.txt",
+            "Aegis_Deploy.json",
             "Deployment_Logs.lnk"
         )
         Get-ChildItem -Path "$env:SystemDrive\Windows\Panther" -File -Recurse -ErrorAction SilentlyContinue | Where-Object {
@@ -916,6 +937,7 @@ function Show-DeploymentReport {
     try {
         $PantherFolder     = "$env:SystemDrive\Windows\Panther"
         $StagedReportPath  = "$PantherFolder\Aegis_Deployment_Report.txt"
+        $StagedJsonPath    = "$PantherFolder\Aegis_Deploy.json"
         $StagedShortcut    = "$PantherFolder\Deployment_Logs.lnk"
 
         $WshShell = New-Object -ComObject WScript.Shell
@@ -938,9 +960,10 @@ function Show-DeploymentReport {
         $WarnCount = ($global:AegisDeployLog | Where-Object { $_.Status -eq "Warning" }).Count
         $FailCount = ($global:AegisDeployLog | Where-Object { $_.Status -eq "Error" }).Count
 
+        # Text Report Generation
         $ReportContent = [System.Text.StringBuilder]::new()
         [void]$ReportContent.AppendLine("================================================================================")
-        [void]$ReportContent.AppendLine("           AEGIS WIN11 DEPLOYMENT & SECURITY AUDIT REPORT (v1.8.0.0)           ")
+        [void]$ReportContent.AppendLine("           AEGIS WIN11 DEPLOYMENT & SECURITY AUDIT REPORT (v1.8.1.0)           ")
         [void]$ReportContent.AppendLine("================================================================================")
         [void]$ReportContent.AppendLine("Generated: $((Get-Date).ToString('yyyy-MM-dd HH:mm:ss K'))")
         [void]$ReportContent.AppendLine("Chassis Sticker ID     : $global:AegisStickerID")
@@ -976,10 +999,15 @@ function Show-DeploymentReport {
         [void]$ReportContent.AppendLine("================================================================================")
 
         $ReportContent.ToString() | Out-File -FilePath $StagedReportPath -Encoding utf8 -Force
+
+        # Machine-Readable JSON Telemetry Serialization (v1.8.1)
+        $global:AegisDeployLog | ConvertTo-Json -Depth 3 | Out-File -FilePath $StagedJsonPath -Encoding utf8 -Force
+
         & icacls.exe $StagedReportPath /inheritance:r /grant:r "*S-1-5-32-544:(F)" "*S-1-5-18:(F)" /q | Out-Null
+        & icacls.exe $StagedJsonPath /inheritance:r /grant:r "*S-1-5-32-544:(F)" "*S-1-5-18:(F)" /q | Out-Null
         & icacls.exe $StagedShortcut /inheritance:r /grant:r "*S-1-5-32-544:(F)" "*S-1-5-18:(F)" /q | Out-Null
 
-        Write-Log "Report" "Deployment audit document staged in: $StagedReportPath" "Success"
+        Write-Log "Report" "Deployment audit documents staged in: $PantherFolder" "Success"
     } catch {
         Write-Log "Report" "Failed to generate staging deployment report: $_" "Warning"
     }
