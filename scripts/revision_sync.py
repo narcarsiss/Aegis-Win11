@@ -23,13 +23,12 @@ TRACKED = [
     ("docs/wiki/Security-Architecture-Compliance-Report.md", "document"),
 ]
 
-
 def get_version(path: Path, kind: str) -> str:
     content = path.read_text(encoding="utf-8-sig")
     if kind == "changelog":
         pattern = r"(?m)^##\s+\[([^\]\r\n]+)\]"
     elif kind == "document":
-        pattern = r"(?im)^\s*(?:<!--\s*)?(?:\*\*)?Document (?:Version|Revision)(?:\*\*)?\s*:\s*(\S+)"
+        pattern = r"(?im)^\s*Document[- ](?:Version|Revision)\s*:\s*([^\r\n]+?)\s*$"
     else:
         pattern = r"(?im)^\s*(?:\#\s*)?Version\s*:\s*(\S+)"
 

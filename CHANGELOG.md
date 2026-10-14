@@ -1,26 +1,18 @@
-<<<<<<< HEAD
-<<<<<<< Updated upstream
 # Changelog
-=======
-=======
->>>>>>> 1c37ff213d024c2a271339d7524c1b5f4eaf778c
 <!-- AEGIS-METADATA:START
 Document-Version: 1.8.0
 Document-Type: changelog
 Maintainer: Moosehead Studio
 AEGIS-METADATA:END -->
-<<<<<<< HEAD
 <!-- AEGIS-REVISION-MATRIX:START -->
 <!-- AEGIS-REVISION-MATRIX:END -->
 ---
  
 # Changelog - Aegis-Win11 Ecosystem
->>>>>>> Stashed changes
 =======
 ---
  
 # Changelog - Aegis-Win11 Ecosystem
->>>>>>> 1c37ff213d024c2a271339d7524c1b5f4eaf778c
 
 All notable changes to this project will be documented in this file.
 

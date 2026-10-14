@@ -264,14 +264,6 @@ Get-Content -Path "C:\Windows\Panther\Aegis_Compensating_Controls.json" | Conver
 
 <a id="10-license"></a>
 ## 10. License
-
-<<<<<<< HEAD
 Released by Moosehead Studio under the MIT License. See `LICENSE` for details.
-<<<<<<< Updated upstream
-=======
 <!-- AEGIS-REVISION-MATRIX:START -->
 <!-- AEGIS-REVISION-MATRIX:END -->
->>>>>>> Stashed changes
-=======
-Released by Moosehead Studio under the MIT License. See `LICENSE` for details.
->>>>>>> 1c37ff213d024c2a271339d7524c1b5f4eaf778c

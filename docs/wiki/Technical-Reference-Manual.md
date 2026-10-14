@@ -1181,10 +1181,6 @@ if ($EnableLAPS_EntraIDSupport) {
     }
 } else {
     Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "RestrictAnonymousSAM" -Value 1 -Type DWord -Force
-<<<<<<< HEAD
 }
 <!-- AEGIS-REVISION-MATRIX:START -->
 <!-- AEGIS-REVISION-MATRIX:END -->
-=======
-}
->>>>>>> 1c37ff213d024c2a271339d7524c1b5f4eaf778c
