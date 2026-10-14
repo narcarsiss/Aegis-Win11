@@ -1,5 +1,5 @@
 <!-- AEGIS-METADATA:START
-Document-Version: 1.8.0
+Document-Version: 1.8.1
 Document-Type: changelog
 Maintainer: Moosehead Studio
 AEGIS-METADATA:END -->
