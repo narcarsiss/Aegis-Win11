@@ -87,6 +87,10 @@ USB_ROOT:\
 
 > [!TIP]
 > Review the generated deployment audit documents (`Aegis_Deployment_Report.txt` and `Aegis_Deploy.json`) located at `C:\Windows\Panther\`.  
+<<<<<<< HEAD
 > These are delivered directly to the new administrator's desktop upon first logon.
 <!-- AEGIS-REVISION-MATRIX:START -->
 <!-- AEGIS-REVISION-MATRIX:END -->
+=======
+> These are delivered directly to the new administrator's desktop upon first logon.
+>>>>>>> 1c37ff213d024c2a271339d7524c1b5f4eaf778c
