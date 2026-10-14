@@ -3,9 +3,9 @@
 ===========================================================================================
 HARDENED WINDOWS 11 UNATTENDED DEPLOYMENT SCHEMA (autounattend.xml)
 ===========================================================================================
-Deployment Target : Windows 11 Enterprise / Pro (amd64)
+Deployment Target : Windows 11 Enterprise / Pro (amd64) - 26H2 Ready
 Organization      : Moosehead Studio
-Version           : 1.8.0
+Version           : 1.8.1
 Regional Baseline : Australia (en-AU) / DD-MM-YYYY Date Format / US Keyboard Layout (0409)
 Execution Flow    : windowsPE -> specialize -> oobeSystem -> FirstLogonCommands
 
@@ -14,6 +14,11 @@ The DiskConfiguration pass below targets DiskID 0 with <WillWipeDisk>true</WillW
 On systems containing multiple physical storage interfaces (mixed PCIe NVMe and SATA AHCI),
 verify that the target high-speed NVMe SSD enumerates as Disk 0 within the UEFI BIOS prior
 to installation, or physically disconnect secondary SATA data cables during initial staging.
+
+EARLY FVE BITLOCKER INTERCEPTION:
+Encryption policies (EncryptionMethodWithXtsOs = 7) are injected during the specialize pass.
+This intercepts Windows 11 automatic device encryption during OOBE, enforcing native XTS-AES-256
+strength on first encryption pass and eliminating multi-hour 128-bit re-encryption cycles.
 
 STAGING PREREQUISITE:
 The post-OOBE orchestrator script must be staged on the deployment media at:
@@ -122,6 +127,22 @@ FirstLogonCommands to execute C:\Aegis\AegisWin11_Deploy.ps1 under full bypass c
                     <Description>Enforce Global Default User Account Picture</Description>
                     <Path>cmd.exe /c reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v UseDefaultTile /t REG_DWORD /d 1 /f 1&gt;nul 2&gt;nul</Path>
                 </RunSynchronousCommand>
+                <!-- Early BitLocker FVE Injection: Enforce XTS-AES-256 Prior to OOBE Device Encryption Handoff -->
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
+                    <Description>Early Interception: Force XTS-AES-256 for OS Drives</Description>
+                    <Path>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v EncryptionMethodWithXtsOs /t REG_DWORD /d 7 /f 1&gt;nul 2&gt;nul</Path>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>3</Order>
+                    <Description>Early Interception: Force XTS-AES-256 for Fixed Data Volumes</Description>
+                    <Path>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v EncryptionMethodWithXtsFdv /t REG_DWORD /d 7 /f 1&gt;nul 2&gt;nul</Path>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>4</Order>
+                    <Description>Early Interception: Force XTS-AES-256 for Removable Drives</Description>
+                    <Path>cmd.exe /c reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v EncryptionMethodWithXtsRdv /t REG_DWORD /d 7 /f 1&gt;nul 2&gt;nul</Path>
+                </RunSynchronousCommand>
             </RunSynchronous>
         </component>
     </settings>
@@ -171,7 +192,7 @@ FirstLogonCommands to execute C:\Aegis\AegisWin11_Deploy.ps1 under full bypass c
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
                     <Order>1</Order>
-                    <CommandLine>powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Aegis\AegisWin11_Deploy.ps1"</CommandLine>
+                    <CommandLine>powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\Aegis\AegisWin11_Deploy.ps1"</CommandLine>
                     <Description>Execute AegisWin11 Master Pipeline</Description>
                 </SynchronousCommand>
             </FirstLogonCommands>
