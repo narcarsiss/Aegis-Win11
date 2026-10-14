@@ -3,7 +3,7 @@
 ===========================================================================================
 HARDENED WINDOWS 11 UNATTENDED DEPLOYMENT SCHEMA (autounattend.xml)
 ===========================================================================================
-Deployment Target : Windows 11 Enterprise / Pro (amd64)
+Deployment Target : Windows 11 Enterprise / Pro (amd64) - 26H2 Ready
 Organization      : Moosehead Studio
 Version           : 1.8.1
 Regional Baseline : Australia (en-AU) / DD-MM-YYYY Date Format / US Keyboard Layout (0409)
@@ -15,7 +15,7 @@ On systems containing multiple physical storage interfaces (mixed PCIe NVMe and 
 verify that the target high-speed NVMe SSD enumerates as Disk 0 within the UEFI BIOS prior
 to installation, or physically disconnect secondary SATA data cables during initial staging.
 
-EARLY FVE BITLOCKER INTERCEPTION (v1.8.1):
+EARLY FVE BITLOCKER INTERCEPTION:
 Encryption policies (EncryptionMethodWithXtsOs = 7) are injected during the specialize pass.
 This intercepts Windows 11 automatic device encryption during OOBE, enforcing native XTS-AES-256
 strength on first encryption pass and eliminating multi-hour 128-bit re-encryption cycles.

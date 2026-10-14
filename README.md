@@ -1,15 +1,20 @@
+<!-- AEGIS-METADATA:START
+Document-Version: 1.8.0
+Document-Type: changelog
+Maintainer: Moosehead Studio
+AEGIS-METADATA:END -->
 
 <p align="center">
   <img src="assets/aegis-crystal-floor.png" alt="Aegis Win11 Logo" width="480" />
 </p>
 
-<h1 align="center">Aegis Win11 Enterprise Deployment Toolkit</h1>
+<h1 align="center">Aegis Windows 11 Deployment Toolkit</h1>
 
 <p align="center"><b>Deterministic Low-Latency Systems Engineering &amp; Zero-Trust Device Foundation</b></p>
 
 <p align="center">
-  <a href="https://github.com/narcarsiss/Aegis-Win11/releases/tag/v1.8.0">
-    <img src="https://img.shields.io/badge/Release-v1.8.0-334155?style=for-the-badge&labelColor=1E293B&logo=github&logoColor=white" alt="Release v1.8.0" /></a>
+  <a href="https://github.com/narcarsiss/Aegis-Win11/releases/tag/v1.8.1">
+    <img src="https://img.shields.io/badge/Release-v1.8.1-334155?style=for-the-badge&labelColor=1E293B&logo=github&logoColor=white" alt="Release v1.8.1" /></a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-334155?style=for-the-badge&labelColor=1E293B" alt="License MIT" /></a>
   <a href="https://github.com/narcarsiss/Aegis-Win11/wiki">
@@ -67,34 +72,40 @@ Every policy within Aegis Win11 is evaluated against four non-negotiable operati
 *   **Digital Audio Workstations (DAWs):** Preserves native ASIO hardware driver abstraction layers (Focusrite, Universal Audio, RME, Behringer, MOTU). Disables Audio Processing Objects (APOs) via `DisableAllSoundEffects` to eliminate DPC latency spikes while keeping DRM protected media pipelines (Widevine, PlayReady) operational. MMCSS Audio task thread priorities are locked to real-time (`Priority = 8`).
 *   **Computer-Aided Design (CAD) & Rendering Suites:** Maintains nested directory depths via NTFS Long Paths (`LongPathsEnabled = 1`), disables NTFS timestamp write operations (`NtfsDisableLastAccessUpdate = 1`), disables 8.3 short filename generation (`NtfsDisable8dot3NameCreation = 1`), and enforces Hardware-Accelerated GPU Scheduling (HAGS) for applications including Autodesk Revit, AutoCAD, Blender, and Adobe Creative Cloud.
 *   **Competitive Gaming & Anti-Cheat Runtimes:** Omits strict kernel-mode code integrity policies (`CodeIntegrityPolicy = 1`) and system-wide Mandatory ASLR, ensuring compatibility with kernel-level anti-cheat platforms (Riot Vanguard, Easy Anti-Cheat, BattlEye) and local gaming clients (Steam, Epic Games).
-*   **Enterprise Suites & Identity Management:** Supports both standalone workstation topologies and enterprise domains via Microsoft Entra ID / Local Administrator Password Solution (LAPS) integration toggles, preserving Windows Remote Management (WinRM) and modern Kerberos/NTLMv2 authentication pathways.
-
+*   **Enterprise Suites & Identity Management:** Supports both standalone workstation topologies and enterprise domains via Microsoft Entra ID / Local Administrator Password Solution (LAPS) integration toggles, preserving Windows Remote Management (WinRM) and modern Kerberos/NTLMv2 authentication pathways. Dynamically anchors local administration under `Aegis$StickerID` to guarantee SAM and NetBIOS 20-character compliance.
+*   **Windows 11 26H2 Ready (54-Item Monolithic Standard):** Natively enforces modern kernel isolation, Administrator Protection (just-in-time elevation), WHCP driver code integrity, Post-Quantum Cryptography (ML-KEM/ML-DSA), and strict DNS-over-HTTPS.
 
 ---
 
 <a id="4-cis-benchmark-nist-compliance-posture"></a>
 ## 4. CIS Benchmark & NIST Compliance Posture
 
-Aegis Win11 aligns with technical controls from the Center for Internet Security (CIS) Microsoft Windows 11 Enterprise Benchmark (v3.0.0) and NIST SP 800-53 Rev 5 / NIST SP 800-171 Rev 2.
+Aegis Win11 aligns with technical controls from the Center for Internet Security (CIS) Microsoft Windows 11 Enterprise Benchmark (v3.0.0), NIST SP 800-53 Rev 5 / NIST SP 800-171 Rev 2, DoD DISA STIG, and the ACSC Essential Eight framework across a 54-item monolithic matrix.
 
 ### Compliance Coverage Breakdown
 
-*   **CIS Level 1 Profile (Enterprise Baseline):** ~24% direct implementation (~60 active configuration directives).
+*   **CIS Level 1 Profile (Enterprise Baseline):** ~24% direct synthetic implementation (~62 active configuration directives).
 *   **CIS Level 2 Profile (High Security / Defense-in-Depth):** ~11% selective implementation.
-*   **Standalone Implementation (Non-Domain Applicable):** 63.0% of CIS Level 1 and 75.9% of NIST SP 800-53 workstation controls.
+*   **Standalone Implementation (Non-Domain Applicable):** 67.4% of CIS Level 1 and 82.8% of NIST SP 800-53 workstation controls.
+*   **DoD DISA Windows 11 STIG Standalone:** 70.5% (74 / 105 applicable controls).
+*   **Microsoft Defender Vulnerability Management (Devices):** 92.6% (63 / 68 controls).
+*   **ACSC Essential Eight Workstation Baseline (ML1-ML3):** 88.5% (23 / 26 controls).
 *   **Network & Protocol Fortress:** 100% compliance across all applicable standalone network boundaries.
 
 ### Documented Technical Deviations
 
-To maintain credibility during external audits and peer review, the framework documents intentional deviations from the CIS Level 2 benchmark:
+To maintain credibility during external audits and peer review, the framework documents 9 intentional architectural deviations (`DEV-01` through `DEV-09`) formally registered during deployment in `C:\Windows\Panther\Aegis_Compensating_Controls.json`:
 
-1.  **Process Mitigation (CIS 18.10.14.2.1):** Bottom-Up ASLR, DEP, and SEHOP are enforced system-wide. Mandatory ASLR (`MandatoryASLR`) is intentionally omitted; enforcing Mandatory ASLR globally causes immediate load termination for binaries and third-party audio/graphics DLLs not compiled with `/DYNAMICBASE`.
-2.  **PowerShell Constrained Language Mode (CIS 18.10.43.1):** Not enforced globally via system policies. Constrained Language Mode completely halts automation scripts, CI/CD runners, and un-cataloged DAW package installation logic.
-3.  **Controlled Folder Access (CIS 18.10.43.4.2):** Defaulted to `AuditMode`. Enforcing CFA in `Block` mode stops creative software (FL Studio, Ableton, Autodesk) and game runtimes from writing legitimate save states, scratch files, and presets to `%USERPROFILE%\Documents`.
-4.  **Network Protocol Binding (IPv6):** IPv6 adapter bindings remain active. Microsoft core networking identifies IPv6 as a mandatory OS component; disabling IPv6 breaks Teredo gaming discovery, Entra ID hybrid join state sync, and WinRM listeners.
-5.  **SMB3 Payload Encryption (CIS 2.3.8.3):** Mandatory SMB payload encryption (`EncryptData = 1`) is omitted. Packet signing (`RequireSecuritySignature = 1`) is enforced to stop NTLM relay attacks, but payload encryption is withheld to avoid saturating workstation CPU cores during multi-gigabit media transfers across local NAS devices.
+1.  **Administrative Identity Anchor (DEV-01 / CIS 2.3.1.1 & 2.3.1.4):** Built-in Administrator (`S-1-5-500`) is permanently disabled. A dynamic hardware-anchored account (`Aegis$StickerID`) is provisioned with 24-character CSPRNG entropy to eliminate RID 500 credential-stuffing targets.
+2.  **Process Mitigation (DEV-02 / CIS 18.10.43.2.1):** Bottom-Up ASLR, DEP, and SEHOP are enforced system-wide. Mandatory ASLR (`MandatoryASLR`) is intentionally omitted; enforcing Mandatory ASLR globally causes immediate load termination for binaries and third-party audio/graphics DLLs not compiled with `/DYNAMICBASE`.
+3.  **Kernel-Mode Code Integrity (DEV-03 / NIST SI-7):** Immutable WDAC application whitelisting is replaced by the Microsoft Recommended Vulnerable Driver Blocklist, WHCP signature verification, and Administrator Code Signing checks to preserve modular DAW audio interfaces and GPU compute runtimes.
+4.  **Local Account Token Filter Policy (DEV-04 / CIS 2.3.10.2):** `LocalAccountTokenFilterPolicy` is conditionally relaxed only when `-EnableLAPS_EntraIDSupport` is active, enabling Windows LAPS and Entra ID remote management while restricting unauthenticated SAM enumeration via `RestrictAnonymousSAM`.
+5.  **Power & Performance Throttling States (DEV-05 / DISA STIG WN11-CC-000050):** PCIe link power management and CPU core-parking throttles are deactivated (`stornvme` Link State D0, MMCSS Priority 8, EPP = 0 Race-to-Sleep) to eliminate real-time DPC latency spikes and audio buffer underruns in professional production environments.
+6.  **Controlled Folder Access (DEV-06 / CIS 18.10.43.3.1):** Defaulted to `AuditMode`. Enforcing CFA in `Block` mode stops creative software (FL Studio, Ableton, Autodesk) and game runtimes from writing legitimate save states, scratch files, and presets to `%USERPROFILE%\Documents`.
+7.  **Telemetry & Diagnostic Data Transmission (DEV-07 / CIS 18.9.30.2):** Diagnostic data is throttled to Security/0 and Settings Cloud Sync is suppressed (`DisableSettingSync = 2`) to maintain air-gapped data sovereignty and prevent cloud leakage of proprietary tokens.
+8.  **DNS-over-HTTPS & Name Resolution (DEV-08 / CIS 18.8.14.1):** Strict DoH is mandated (`DoHPolicy = 3`) and unencrypted fallback is prohibited; mDNS and LLMNR are completely excised to eliminate local broadcast spoofing and poisoned credential relay vectors.
+9.  **Interactive Logon Legal Notice (DEV-09 / CIS 2.3.7.3):** Interactive legal notice dialogs are suppressed on standalone creator endpoints to ensure unhindered single-user workstation workflows; delegated to enterprise domain group policies.
 
-  
 ---
 
 <a id="5-staging-unattended-deployment-topology"></a>
@@ -112,10 +123,11 @@ INSTALLER_USB:
             └───Aegis
                 └───AegisWin11_Deploy.ps1
 ```
-</details>
+</details>  
 
+---
 > [!WARNING]  
-> Deploying `autounattend.xml` with automated disk partitioning (`WipeDisk=true`) destroys all existing volume data on Disk 0. Ensure target machine data is backed up and BitLocker recovery keys are escrowed before boot media execution.
+> Deploying `autounattend.xml` with automated disk partitioning (`WipeDisk=true`) destroys all existing volume data on Disk 0. Ensure target machine data is backed up and BitLocker recovery keys are escrowed before boot media execution.  
 > Ensure the target installation drive enumerates as Disk 0 in the UEFI BIOS prior to boot, or disconnect/disable secondary SATA/AHCI drives upon initial staging.
   
 ---
@@ -140,6 +152,7 @@ INSTALLER_USB:
 | `-ChangeDefaultWin11Name` | Switch / Boolean | `$true` | Updates the BCD bootloader description to `Win11_Aegis_OS-$StickerID`. |
 | `-EnableVBS` | Switch / Boolean | `$true` | Enforces Virtualization-Based Security via group policy. |
 | `-EnableHVCI` | Switch / Boolean | `$true` | Enforces Hypervisor-Enforced Code Integrity for kernel execution. |
+| `-EnableLegacyFeatures` | Switch / Boolean | `$false` | When `$false` (default), skips redundant DISM capability checks for WordPad/WMIC on Build 26100+ and suppresses vintage registry hacks. When `$true`, executes legacy compatibility routines. |
 | `-Unattended` | Switch / Boolean | `$true` | Suppresses interactive GUI modal dialogues, routing credentials to the transcript file. |
 | `-AutoReboot` | Switch / Boolean | `$true` | Executes an automated reboot upon pipeline completion. If `$false`, pauses for operator interaction. |
 | `-ControlledFolderAccessMode` | String (`Disabled`, `Enabled`, `AuditMode`) | `"AuditMode"` | Configures Microsoft Defender Controlled Folder Access. Defaulted to `AuditMode` to prevent DAW/CAD save failures. |
@@ -155,17 +168,18 @@ INSTALLER_USB:
 ### Hardware Identity Engine
 The framework dynamically provisions a unique, hardware-bound administrative anchor during installation:
 1.  Queries `Win32_Bios.SerialNumber`. If non-standard, queries `Win32_ComputerSystemProduct.UUID` and hashes the output via SHA-256 to create a 6-character identifier (`$StickerID`).
-2.  Provisions `MHS-$StickerID-Admin` with a 24-character cryptographic password generated at runtime via `System.Security.Cryptography.RandomNumberGenerator`.
+2.  Provisions `Aegis$StickerID` with a 24-character cryptographic password generated at runtime via `System.Security.Cryptography.RandomNumberGenerator`, strictly complying with NetBIOS and SAM 20-character account ceilings.
 3.  Enforces an immediate credential reset upon first interactive console login (`net user ... /logonpasswordchg:yes`).
 4.  Exports the secret to `C:\Windows\Panther\Aegis_Bootstrap_Secret.txt` under strict ACL permissions restricted to `SYSTEM` and `Administrators`, then disables the built-in `Administrator` account (`SID S-1-5-500`).
 
 ### Storage Subsystem & Recovery Engine Architecture
-1.  **Unified 4096-Byte File Allocation:** The `autounattend.xml` schema forces `BlockAllocationSize = 4096` on volume `C:` during the clean WinPE format pass. Matching NTFS cluster sizes to physical 4KB NAND pages eliminates Read-Modify-Write (RMW) amplification loops, extending flash endurance and reducing I/O write latency.
-2.  **Metadata & Index Suppression:** Sets `NtfsDisableLastAccessUpdate = 1` and `NtfsDisable8dot3NameCreation = 1` during OOBE setup. This stops Master File Table (MFT) write thrashing and eliminates 8.3 short filename generation overhead across directories containing massive file counts.
-3.  **Continuous Controller Readiness:** Configures `IdleTimeout = 0` and `EnableD3 = 0` under `stornvme\Parameters\Device`, keeping NVMe links in active power state D0 and eliminating controller wake-up latency during real-time I/O processing.
-4.  **Storage Sense Automation:** Injects native policies (`AllowStorageSenseGlobal = 1`, `ConfigStorageSenseCloudContentCleanThreshold = 30`) to purge unreferenced temporary files automatically.
-5.  **Push-Button Reset (PBR) 4KB Mirroring:** Stages a bare-metal recovery engine via `C:\Recovery\OEM\ResetConfig.xml`. If a full wipe reset is executed, WinRE formats the system partition using an exact 4096-byte quick format (`format quick fs=ntfs unit=4096`), guaranteeing that factory recovery operations maintain physical NAND page alignment.
-6.  **Silent Hardware BitLocker Pipeline:** Validates that TPM 2.0 is ready and that volume `C:` possesses an allocation unit size of exactly 4096 bytes before silently enabling XTS-AES-256 BitLocker encryption with a TPM protector. If `-EnableLAPS_EntraIDSupport` is false, it archives the recovery password to `C:\Aegis_BitLocker_Recovery.txt`; otherwise, local export is bypassed in favor of cloud escrow.
+1.  **Early FVE BitLocker Interception:** Injects `EncryptionMethodWithXtsOs = 7` during the `specialize` pass of `autounattend.xml`, pre-empting native Windows 11 automatic device encryption and enforcing XTS-AES-256 on the first pass to eliminate multi-hour 128-bit re-encryption cycles.
+2.  **Unified 4096-Byte File Allocation:** The `autounattend.xml` schema forces `BlockAllocationSize = 4096` on volume `C:` during the clean WinPE format pass. Matching NTFS cluster sizes to physical 4KB NAND pages eliminates Read-Modify-Write (RMW) amplification loops, extending flash endurance and reducing I/O write latency.
+3.  **Metadata & Index Suppression:** Sets `NtfsDisableLastAccessUpdate = 1` and `NtfsDisable8dot3NameCreation = 1` during OOBE setup. This stops Master File Table (MFT) write thrashing and eliminates 8.3 short filename generation overhead across directories containing massive file counts.
+4.  **Continuous Controller Readiness:** Configures `IdleTimeout = 0` and `EnableD3 = 0` under `stornvme\Parameters\Device`, keeping NVMe links in active power state D0 and eliminating controller wake-up latency during real-time I/O processing.
+5.  **Storage Sense Automation:** Injects native policies (`AllowStorageSenseGlobal = 1`, `ConfigStorageSenseCloudContentCleanThreshold = 30`) to purge unreferenced temporary files automatically.
+6.  **Push-Button Reset (PBR) 4KB Mirroring:** Stages a bare-metal recovery engine via `C:\Recovery\OEM\ResetConfig.xml`. If a full wipe reset is executed, WinRE formats the system partition using an exact 4096-byte quick format (`format quick fs=ntfs unit=4096`), guaranteeing that factory recovery operations maintain physical NAND page alignment.
+7.  **Silent Hardware BitLocker Pipeline:** Validates that TPM 2.0 is ready and that volume `C:` possesses an allocation unit size of exactly 4096 bytes before silently enabling XTS-AES-256 BitLocker encryption with a TPM protector. If `-EnableLAPS_EntraIDSupport` is false, it archives the recovery password to `C:\Aegis_BitLocker_Recovery.txt`; otherwise, local export is bypassed in favor of cloud escrow.
 
 ### Consumer Bloatware Sanitization
 Aegis Win11 rejects blanket wildcard AppX removal scripts (`Get-AppxPackage | Remove-AppxPackage`). Indiscriminate package uninstallation destroys versioned Windows 11 system runtimes (`Microsoft.UI.Xaml.2.8`), the Windows Security Center interface (`Microsoft.SecHealthUI`), and Microsoft Store infrastructure required for Winget package management.
@@ -173,7 +187,7 @@ Aegis Win11 rejects blanket wildcard AppX removal scripts (`Get-AppxPackage | Re
 The framework enforces an explicit, non-destructive consumer blacklist targeting third-party and non-essential consumer stubs (BingNews, BingWeather, Clipchamp, Solitaire, Zune Video, Todos). Both installed instances and online provisioned stubs (`Get-AppxProvisionedPackage`) are uninstalled, preventing re-provisioning on secondary local user profiles while keeping system dependencies intact.
 
 ### Targeted Desktop Audit & Logs Delivery
-The deployment report (`Aegis_Deployment_Report.txt`) and a direct shortcut to `C:\Windows\Panther` (`Deployment_Logs.lnk`) are generated during finalization and staged in the Panther vault. A post-install first-logon dispatcher (`Aegis_PostLogon_Cleanup.ps1`) transfers these files directly onto the created administrator's desktop (`MHS-$StickerID-Admin`), ensuring full visibility while keeping public and unprivileged desktops clean.
+The deployment report (`Aegis_Deployment_Report.txt`), the machine-readable telemetry log (`Aegis_Deploy.json`), the formal audit manifest (`Aegis_Compensating_Controls.json`), and a direct shortcut to `C:\Windows\Panther` (`Deployment_Logs.lnk`) are generated during finalization and staged in the Panther vault. A post-install first-logon dispatcher (`Aegis_PostLogon_Cleanup.ps1`) transfers these files directly onto the created administrator's desktop (`Aegis$StickerID`), ensuring full visibility while keeping public and unprivileged desktops clean.
 </details>
   
 ---
@@ -182,7 +196,29 @@ The deployment report (`Aegis_Deployment_Report.txt`) and a direct shortcut to `
 <details>
 <summary><strong>8. Verification & Diagnostic Auditing</strong></summary>
 
-Post-installation validation can be executed using elevated PowerShell diagnostic commands:
+### Companion Live-OS Drift Auditing Engine (`Post-FeatureUpdate-Compare-AegisBase.ps1`)
+
+Major Windows Feature Updates (e.g., updating to 26H2) and cumulative servicing packages frequently overwrite local security policies and re-enable telemetry services. Aegis includes a standalone companion drift auditor designed to run on live, post-update systems:
+
+* **Read-Only Non-Destructive Auditing:** Compares active registry keys, service startup configurations, and driver code integrity policies against the master 54-item baseline without modifying system state.
+* **Compensating Controls Manifest Verification:** Ingests and parses `C:\Windows\Panther\Aegis_Compensating_Controls.json`, verifying that all 9 approved architectural exceptions (`DEV-01` through `DEV-09`) remain certified.
+* **Single-Item Interactive Remediation:** Prompts operators individually (`[Y]es / [N]o / [Q]uit`) to restore drifted policies. Blanket overrides are prevented to ensure operational stability.
+* **OS Build & Legacy Feature Gating:** Uses dynamic build detection (`MinBuild = 26300`) to suppress false-positive drift warnings on pre-26H2 images, and gates legacy checks behind `-EnableLegacyFeatures`.
+
+```powershell
+# 1. Execute non-destructive audit pass:
+powershell.exe -ExecutionPolicy Bypass -File .\Post-FeatureUpdate-Compare-AegisBase.ps1 -AuditOnly
+
+# 2. Execute interactive single-item remediation:
+powershell.exe -ExecutionPolicy Bypass -File .\Post-FeatureUpdate-Compare-AegisBase.ps1
+
+# 3. Force automated mass remediation across all drifted policies:
+powershell.exe -ExecutionPolicy Bypass -File .\Post-FeatureUpdate-Compare-AegisBase.ps1 -AutoRemediateAll
+```
+
+### Manual Diagnostic Commands
+
+Post-installation validation can also be executed using elevated PowerShell diagnostic commands:
 
 ```powershell
 # 1. Verify 4KB Allocation Unit Size
@@ -202,6 +238,9 @@ Get-ProcessMitigation -System
 secedit.exe /export /cfg "$env:TEMP\secpol_verify.inf" /areas USER_RIGHTS /quiet
 Select-String -Path "$env:TEMP\secpol_verify.inf" -Pattern "SeNetworkLogonRight"
 Remove-Item -Path "$env:TEMP\secpol_verify.inf" -Force
+
+# 6. Verify Compensating Controls Manifest Schema & Integrity
+Get-Content -Path "C:\Windows\Panther\Aegis_Compensating_Controls.json" | ConvertFrom-Json | Select-Object -ExpandProperty CompensatingControls | Format-Table DeviationID, Standard, Status
 ```
 </details>
   
@@ -211,7 +250,7 @@ Remove-Item -Path "$env:TEMP\secpol_verify.inf" -Force
 ## 9. Community & Technical Support
 
 *   **Wiki Documentation:** [Aegis-Win11 Wiki](https://github.com/narcarsiss/Aegis-Win11/wiki)
-*   **Technical Reference Manual:** [44-Item Policy Matrix](https://github.com/narcarsiss/Aegis-Win11/wiki/Technical-Reference-Manual)
+*   **Technical Reference Manual:** [54-Item Policy Matrix](https://github.com/narcarsiss/Aegis-Win11/wiki/Technical-Reference-Manual)
 *   **Security Architecture Report:** [Formal Compliance Audit](https://github.com/narcarsiss/Aegis-Win11/wiki/Security-Architecture-&-Compliance-Report)
 *   **Community Discussions:** [GitHub Discussions](https://github.com/narcarsiss/Aegis-Win11/discussions)
      

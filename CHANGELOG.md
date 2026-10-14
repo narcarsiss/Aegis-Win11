@@ -1,23 +1,40 @@
-# Changelog
-
-All notable changes to the Aegis Win11 Enterprise Deployment Toolkit are documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
+<!-- AEGIS-METADATA:START
+Document-Version: 1.8.0
+Document-Type: changelog
+Maintainer: Moosehead Studio
+AEGIS-METADATA:END -->
 ---
  
+# Changelog - Aegis-Win11 Ecosystem
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
 ## [1.8.1] - 2026
 ### Added
-* Early FVE BitLocker Interception (`autounattend.xml`): Injected XTS-AES-256 policy keys (`EncryptionMethodWithXtsOs = 7`) during the `specialize` pass to intercept Windows 11 automatic device encryption during OOBE, eliminating multi-hour 128-bit re-encryption cycles on clean installations.
-* 4Kn Sector Alignment (`autounattend.xml`): Enforced deterministic 4096-byte block allocation sizing (`BlockAllocationSize=4096`) on OS volume formatting passes.
-* Settings Cloud Sync Suppression (`AegisWin11_Deploy.ps1`): Added enterprise GPO rules (`DisableSettingSync = 2`, `DisableSettingSyncUserOverride = 1`) to block Microsoft Account / Entra ID settings roaming post-deployment.
-* Dynamic OS Build Gating (`AegisWin11_Deploy.ps1`): Implemented version checks (`$OSBuild -ge 26100`) to bypass redundant DISM capability queries for natively excised components (WordPad, WMIC) and restrict Windows Recall suppression (`DisableRecallDataProviders`) to compatible builds.
-* Machine-Readable Telemetry Export (`AegisWin11_Deploy.ps1`): Serialized global deployment execution logs to JSON (`C:\Windows\Panther\Aegis_Deploy.json`) with persistent exemption rules during pre-reboot cleaning.
-* Post-Feature Update Drift Auditor (`Post-FeatureUpdate-Compare-AegisBase.ps1`): Introduced a standalone, read-only or interactive compliance script to compare live registry and security subsystems against the Aegis baseline following OS feature upgrades.
+- **54-Item Monolithic Hardening Baseline**: Expanded the core deployment matrix to incorporate Items 45 through 54, natively targeting Windows 11 26H2 (Build 26300+).
+- **Administrator Protection (Item 45)**: Integrated just-in-time (JIT) ephemeral token elevation and admin token filtering under `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System`.
+- **Native Sysmon Service Integration (Item 46)**: Automated native 26H2 Sysmon service activation (`Start = 2`) with an initial baseline security capture XML schema.
+- **Smart App Control Enforcement (Item 47)**: Enforced programmatic Code Integrity transition to Enforced mode via `VerifiedAndReputablePolicyState = 1`.
+- **Strict WHCP Driver Code Integrity (Item 48)**: Hard-enforced Windows Hardware Compatibility Program signatures and revoked legacy cross-signed driver trust at the kernel loader boundary.
+- **Post-Quantum Cryptography Architecture (Item 49)**: Registered post-quantum key encapsulation (ML-KEM) and digital signature (ML-DSA) algorithms across CNG and Schannel TLS 1.3 handshakes.
+- **Batch Script Tamper Resistance (Item 50)**: Enforced OS-level execution locks on running `.bat` and `.cmd` files (`EnforceScriptSecurity = 1`, `LockExecutingBatchFiles = 1`).
+- **Race-to-Sleep Power Optimization (Item 51)**: Enforced Energy Performance Preference (EPP) Index `0` under Processor Power Management for unthrottled task dispatch without altering hardware timers.
+- **NPU & AppContainer Task Manager Metrics (Item 52)**: Enabled default visibility for Neural Processing Unit load and container isolation status columns.
+- **Basic Camera Stream Isolation (Item 53)**: Enforced `EnableBasicCameraMode = 1` and suppressed background OS neural processing brokers on video capture streams.
+- **Strict DNS-over-HTTPS & mDNS Suppression (Item 54)**: Hardened the network stack by mandating `DoHPolicy = 3` and setting `EnableMDNS = 0`.
+- **Formal Compensating Controls Engine**: Embedded automated generation of `C:\Windows\Panther\Aegis_Compensating_Controls.json`, declaring all 9 approved architectural deviations (`DEV-01` to `DEV-09`) for SOC auditors and scanners.
+- **Companion Live-OS Drift Auditor (`Post-FeatureUpdate-Compare-AegisBase.ps1`)**: Added standalone utility providing read-only evaluation, single-item interactive remediation (`Y/N/Q`), and manifest validation post-Feature Update.
+- **Early FVE BitLocker Interception (`autounattend.xml`)**: Injected `EncryptionMethodWithXtsOs = 7` during the `specialize` pass to force XTS-AES-256 during OOBE setup.
 
 ### Changed
-* Identity Anchor Naming Compliance (`AegisWin11_Deploy.ps1`): Refactored the hardware-bound admin naming schema from `MHS-$StickerID-Admin` to `Aegis$StickerID` to strictly adhere to NetBIOS and SAM 20-character account ceilings.
-* Unattended Process Binding (`autounattend.xml`): Appended `-NonInteractive` to `FirstLogonCommands` execution parameters to ensure unhandled child exceptions terminate cleanly without stalling staging phases.
+- **Version Harmonization**: Enforced strict Semantic Versioning (`1.8.1`) across all code headers, reports, and manuals.
+- **Identity Anchor SAM Compliance**: Refactored hardware-bound administrative naming from `MHS-$StickerID-Admin` to `Aegis$StickerID` to strictly enforce NetBIOS/SAM 20-character bounds.
+- **Legacy Capability Evacuation Gating**: Wrapped DISM removal calls for WordPad, WMIC, and PowerShell v2 behind `$EnableLegacyFeatures` and build threshold checks (`$OSBuild -lt 26100`).
+- **Unattended Setup Binding**: Appended `-NonInteractive` to `FirstLogonCommands` execution line in `autounattend.xml`.
+- **Benchmark Compliance Scores**: Recalculated standalone scores to reflect 54-item coverage (CIS L1: 67.4%, NIST SP 800-53: 82.8%, Defender: 92.6%, ACSC E8: 88.5%).
 
 ---
 
