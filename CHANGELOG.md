@@ -1,4 +1,17 @@
+<<<<<<< Updated upstream
 # Changelog
+=======
+<!-- AEGIS-METADATA:START
+Document-Version: 1.8.0
+Document-Type: changelog
+Maintainer: Moosehead Studio
+AEGIS-METADATA:END -->
+<!-- AEGIS-REVISION-MATRIX:START -->
+<!-- AEGIS-REVISION-MATRIX:END -->
+---
+ 
+# Changelog - Aegis-Win11 Ecosystem
+>>>>>>> Stashed changes
 
 All notable changes to the Aegis Win11 Enterprise Deployment Toolkit are documented in this file.
 

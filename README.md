@@ -227,3 +227,8 @@ Remove-Item -Path "$env:TEMP\secpol_verify.inf" -Force
 ## 10. License
 
 Released by Moosehead Studio under the MIT License. See `LICENSE` for details.
+<<<<<<< Updated upstream
+=======
+<!-- AEGIS-REVISION-MATRIX:START -->
+<!-- AEGIS-REVISION-MATRIX:END -->
+>>>>>>> Stashed changes

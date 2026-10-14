@@ -1,4 +1,6 @@
 <#
+<!-- AEGIS-REVISION-MATRIX:START -->
+<!-- AEGIS-REVISION-MATRIX:END -->
 .SYNOPSIS
     Master deployment, hardening, and workstation tuning script for Windows 11 Enterprise.
 .DESCRIPTION

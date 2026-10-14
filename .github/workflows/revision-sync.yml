@@ -1,0 +1,40 @@
+name: Aegis Revision Sync
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aegis-revision-sync-main
+  cancel-in-progress: false
+
+jobs:
+  revision-sync:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+
+      - name: Generate revision matrix
+        run: python3 scripts/revision_sync.py
+
+      - name: Commit generated README matrix
+        run: |
+          if git diff --quiet -- README.md; then
+            echo "README revision matrix already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "docs: sync Aegis revision matrix [skip ci]"
+          git push origin HEAD:main
