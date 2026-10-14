@@ -266,4 +266,17 @@ Get-Content -Path "C:\Windows\Panther\Aegis_Compensating_Controls.json" | Conver
 ## 10. License
 Released by Moosehead Studio under the MIT License. See `LICENSE` for details.
 <!-- AEGIS-REVISION-MATRIX:START -->
+<table>
+  <thead><tr><th>Tracked File</th><th>Revision</th></tr></thead>
+  <tbody>
+  <tr><td><a href="https://github.com/narcarsiss/Aegis-Win11/blob/main/autounattend.xml"><code>autounattend.xml</code></a></td><td><img src="https://img.shields.io/badge/Rev-1.8.1-334155?style=flat-square&amp;labelColor=1E293B" alt="Revision 1.8.1"></td></tr>
+  <tr><td><a href="https://github.com/narcarsiss/Aegis-Win11/blob/main/AegisWin11_Deploy.ps1"><code>AegisWin11_Deploy.ps1</code></a></td><td><img src="https://img.shields.io/badge/Rev-1.8.1-334155?style=flat-square&amp;labelColor=1E293B" alt="Revision 1.8.1"></td></tr>
+  <tr><td><a href="https://github.com/narcarsiss/Aegis-Win11/blob/main/Post-FeatureUpdate-Compare-AegisBase.ps1"><code>Post-FeatureUpdate-Compare-AegisBase.ps1</code></a></td><td><img src="https://img.shields.io/badge/Rev-1.8.1-334155?style=flat-square&amp;labelColor=1E293B" alt="Revision 1.8.1"></td></tr>
+  <tr><td><a href="https://github.com/narcarsiss/Aegis-Win11/blob/main/README.md"><code>README.md</code></a></td><td><img src="https://img.shields.io/badge/Rev-1.8.1-334155?style=flat-square&amp;labelColor=1E293B" alt="Revision 1.8.1"></td></tr>
+  <tr><td><a href="https://github.com/narcarsiss/Aegis-Win11/blob/main/CHANGELOG.md"><code>CHANGELOG.md</code></a></td><td><img src="https://img.shields.io/badge/Rev-1.8.1-334155?style=flat-square&amp;labelColor=1E293B" alt="Revision 1.8.1"></td></tr>
+  <tr><td><a href="https://github.com/narcarsiss/Aegis-Win11/blob/main/docs/wiki/home.md"><code>home.md</code></a></td><td><img src="https://img.shields.io/badge/Rev-1.8.0-334155?style=flat-square&amp;labelColor=1E293B" alt="Revision 1.8.0"></td></tr>
+  <tr><td><a href="https://github.com/narcarsiss/Aegis-Win11/blob/main/docs/wiki/Technical-Reference-Manual.md"><code>Technical-Reference-Manual.md</code></a></td><td><img src="https://img.shields.io/badge/Rev-1.8.0-334155?style=flat-square&amp;labelColor=1E293B" alt="Revision 1.8.0"></td></tr>
+  <tr><td><a href="https://github.com/narcarsiss/Aegis-Win11/blob/main/docs/wiki/Security-Architecture-Compliance-Report.md"><code>Security-Architecture-Compliance-Report.md</code></a></td><td><img src="https://img.shields.io/badge/Rev-1.8.0-334155?style=flat-square&amp;labelColor=1E293B" alt="Revision 1.8.0"></td></tr>
+  </tbody>
+</table>
 <!-- AEGIS-REVISION-MATRIX:END -->
