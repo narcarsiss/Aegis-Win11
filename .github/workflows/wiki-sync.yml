@@ -1,0 +1,154 @@
+# @file wiki-sync.yml
+# @brief Aegis Wiki Sync Workflow
+#
+# @details Automates the synchronization of Markdown documentation from the
+# Aegis `docs/wiki` directory to the repository's native GitHub Wiki upon
+# merge to the `main` branch or manual dispatch.
+#
+# @section Workflow Triggers
+# - `pull_request` (closed/merged to main)
+# - `workflow_dispatch` (manual execution)
+#
+# @section Security Constraints
+# - `contents: read` strictly limits native token permissions.
+# - Explicit `persist-credentials: false` in checkout.
+# - Relies on `AEGIS_WIKI_TOKEN` organizational secret for out-of-bounds Wiki push.
+#
+# @section Requirements
+# - Source files must exist and be non-empty.
+# - Source files must contain a strictly SemVer compliant `Document Version:` header.
+
+name: Aegis Wiki Sync
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aegis-wiki-sync
+  cancel-in-progress: false
+
+jobs:
+  publish-wiki:
+    name: Publish documentation to GitHub Wiki
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Validate Wiki source files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Validate existence and non-zero size
+          for file in \
+            docs/wiki/home.md \
+            docs/wiki/Technical-Reference-Manual.md \
+            docs/wiki/Security-Architecture-Compliance-Report.md
+          do
+            test -s "$file" || {
+              echo "::error::Missing or empty Wiki file: $file"
+              exit 1
+            }
+          done
+
+          # Python SemVer validation harness for Document Version headers
+          python3 - <<'PY'
+          import pathlib
+          import re
+
+          for path in pathlib.Path("docs/wiki").glob("*.md"):
+              text = path.read_text(encoding="utf-8-sig")
+              match = re.search(
+                  r"(?im)^\s*Document[- ](?:Version|Revision)\s*:\s*(\S+)",
+                  text,
+              )
+              
+              if not match or not re.fullmatch(
+                  r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)",
+                  match.group(1),
+              ):
+                  raise SystemExit(
+                      f"Invalid document revision: {path}"
+                  )
+              
+              print(f"{path}: {match.group(1)}")
+          PY
+
+      - name: Clone GitHub Wiki
+        shell: bash
+        env:
+          WIKI_TOKEN: ${{ secrets.AEGIS_WIKI_TOKEN }}
+        run: |
+          set -euo pipefail
+          
+          test -n "$WIKI_TOKEN" || {
+            echo "::error::AEGIS_WIKI_TOKEN is not configured"
+            exit 1
+          }
+
+          # Securely inject base64 encoded token into basic auth header
+          git -c \
+            "http.extraheader=AUTHORIZATION: basic $(printf 'x-access-token:%s' "$WIKI_TOKEN" | base64 -w0)" \
+            clone \
+            "https://github.com/${GITHUB_REPOSITORY}.wiki.git" \
+            wiki-publish
+
+      - name: Synchronize Wiki pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          
+          # Map repository documentation paths to strict Wiki output paths
+          cp docs/wiki/home.md \
+            wiki-publish/Home.md
+          cp docs/wiki/Technical-Reference-Manual.md \
+            wiki-publish/Technical-Reference-Manual.md
+          cp docs/wiki/Security-Architecture-Compliance-Report.md \
+            wiki-publish/Security-Architecture-Compliance-Report.md
+
+      - name: Commit and publish Wiki
+        shell: bash
+        env:
+          WIKI_TOKEN: ${{ secrets.AEGIS_WIKI_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd wiki-publish
+          
+          # Configure automated commit attribution
+          git config user.name "aegis-wiki-bot"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+            
+          # Stage specific documentation targets
+          git add -- \
+            Home.md \
+            Technical-Reference-Manual.md \
+            Security-Architecture-Compliance-Report.md
+            
+          # Exit cleanly if no changes are detected to avoid empty commits
+          if git diff --cached --quiet; then
+            echo "Wiki already synchronized."
+            exit 0
+          fi
+          
+          git commit -m \
+            "docs: synchronize Aegis Wiki from main"
+            
+          # Securely push target branch
+          git -c \
+            "http.extraheader=AUTHORIZATION: basic $(printf 'x-access-token:%s' "$WIKI_TOKEN" | base64 -w0)" \
+            push origin HEAD:master
