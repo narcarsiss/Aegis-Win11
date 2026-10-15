@@ -5,9 +5,11 @@ Document-Version: 1.8.0
 Document-Type: Security Architecture & Compliance Documentation
 Maintainer: Moosehead Studio
 AEGIS-METADATA:END -->
+<!-- AEGIS-REVISION-MATRIX:START -->
+<!-- AEGIS-REVISION-MATRIX:END -->
 
 <p align="center">
-  <img src="../../assets/aegis-shield-base.png" alt="Aegis shield base" width="25%" />
+  <img src="https://raw.githubusercontent.com/narcarsiss/Aegis-Win11/main/assets/aegis-shield-base.png" alt="Aegis shield base" width="25%" />
 </p>
 
 **Document revision:** `1.8.0`  
@@ -222,5 +224,4 @@ powershell.exe -ExecutionPolicy Bypass -File .\Post-FeatureUpdate-Compare-AegisB
 ## 10. Conclusion
 
 Aegis Win11 provides an intentional, defensible security architecture. By aligning with CIS and NIST controls where they eliminate authentic attack vectors—and deliberately documenting deviations where synthetic rules destroy workstation utility—the framework delivers a hardened, production-ready Windows 11 endpoint engineered for real-world enterprise, creative, and engineering operations.
-<!-- AEGIS-REVISION-MATRIX:START -->
-<!-- AEGIS-REVISION-MATRIX:END -->
+

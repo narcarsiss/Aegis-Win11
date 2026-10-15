@@ -5,9 +5,11 @@ Document-Version: 1.8.0
 Document-Type: Enterprise Infrastructure Documentation
 Maintainer: Moosehead Studio
 AEGIS-METADATA:END -->
+<!-- AEGIS-REVISION-MATRIX:START -->
+<!-- AEGIS-REVISION-MATRIX:END -->
 
 <p align="center">
-  <img src="../../assets/aegis-shield-base.png" alt="Aegis shield base" width="25%" />
+  <img src="https://raw.githubusercontent.com/narcarsiss/Aegis-Win11/main/assets/aegis-shield-base.png" alt="Aegis shield base" width="25%" />
 </p>
 
 **Document revision:** `1.8.0`  
@@ -35,7 +37,7 @@ Aegis Win11 is engineered to replace subjective, community-sourced "debloating" 
 ## Systems Architecture Blueprint
 
 <p align="center">
-  <img src="../../assets/aegis-parameter-matrix.png" alt="Aegis Win11 parameter matrix" width="100%" />
+  <img src="https://raw.githubusercontent.com/narcarsiss/Aegis-Win11/main/assets/aegis-parameter-matrix.png" alt="Aegis Win11 parameter matrix" width="100%" />
 </p>
 
 ---
@@ -88,5 +90,4 @@ USB_ROOT:\
 > [!TIP]
 > Review the generated deployment audit documents (`Aegis_Deployment_Report.txt` and `Aegis_Deploy.json`) located at `C:\Windows\Panther\`.  
 > These are delivered directly to the new administrator's desktop upon first logon.
-<!-- AEGIS-REVISION-MATRIX:START -->
-<!-- AEGIS-REVISION-MATRIX:END -->
+

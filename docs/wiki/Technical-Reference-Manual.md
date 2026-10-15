@@ -5,9 +5,11 @@ Document-Version: 1.8.0
 Document-Type: Technical Reference Documentation
 Maintainer: Moosehead Studio
 AEGIS-METADATA:END -->
+<!-- AEGIS-REVISION-MATRIX:START -->
+<!-- AEGIS-REVISION-MATRIX:END -->
 
 <p align="center">
-  <img src="../../assets/aegis-shield-base.png" alt="Aegis shield base" width="25%" />
+  <img src="https://raw.githubusercontent.com/narcarsiss/Aegis-Win11/main/assets/aegis-shield-base.png" alt="Aegis shield base" width="25%" />
 </p>
 
 **Document revision:** `1.8.0`  
@@ -1182,5 +1184,4 @@ if ($EnableLAPS_EntraIDSupport) {
 } else {
     Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "RestrictAnonymousSAM" -Value 1 -Type DWord -Force
 }
-<!-- AEGIS-REVISION-MATRIX:START -->
-<!-- AEGIS-REVISION-MATRIX:END -->
+
