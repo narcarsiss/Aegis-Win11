@@ -1,0 +1,6 @@
+{
+    "github-actions.workflows.pinned.workflows": [
+        ".github/workflows/wiki-sync.yml",
+        ".github/workflows/revision-sync.yml"
+    ]
+}
