@@ -50,7 +50,9 @@ def get_version(path: Path, kind: str) -> str:
 
     else:
         # PowerShell .NOTES or XML header comment.
-        pattern = r"(?im)^\s*(?:#\s*)?Version\s*:\s*(\S+)"
+        # Old Match--> pattern = r"(?im)^\s*(?:#\s*)?Version\s*:\s*(\S+)"
+        #New Match Patters for Complient Enterprise Scanning  [METADATA] Blocks
+        pattern = r'(?m)^\s*"Version"\s*:\s*"([^"]+)"\s*,?\s*$'
 
     match = re.search(pattern, content)
 

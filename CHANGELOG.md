@@ -1,18 +1,29 @@
-# Changelog
-<!-- AEGIS-METADATA:START
-Document-Version: 1.8.0
-Document-Type: changelog
-Maintainer: Moosehead Studio
-AEGIS-METADATA:END -->
+<!-- [METADATA]
+{
+  "DocumentID": "AEGIS-CHANGELOG-DOCUMENTATION",
+  "Title": "Aegis-Win11 Ecosystem Changelog",
+  "Version": "1.8.1",
+  "ReleaseDate": "2026-10-14",
+  "Classification": "Public Engineering Documentation",
+  "TargetOS": "Windows 11 Enterprise / Pro (24H2, 26H2)",
+  "BaselineMatrix": "54-Item Monolithic Architecture",
+  "CompensatingControls": "DEV-01 through DEV-09",
+  "ComplianceStandards": [
+    "CIS Windows 11 Enterprise Benchmark v3.0.0",
+    "NIST SP 800-53 Rev 5",
+    "DoD DISA Windows 11 STIG",
+    "ACSC Essential Eight"
+  ],
+  "Maintainer": "Damien John O'Brien / Moosehead Studio"
+}
+-->
+
 <!-- AEGIS-REVISION-MATRIX:START -->
 <!-- AEGIS-REVISION-MATRIX:END -->
----
  
 # Changelog - Aegis-Win11 Ecosystem
-=======
+
 ---
- 
-# Changelog - Aegis-Win11 Ecosystem
 
 All notable changes to this project will be documented in this file.
 

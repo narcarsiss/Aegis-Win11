@@ -1,8 +1,22 @@
-<!-- AEGIS-METADATA:START
-Document-Version: 1.8.1
-Document-Type: changelog
-Maintainer: Moosehead Studio
-AEGIS-METADATA:END -->
+<!-- [METADATA]
+{
+  "DocumentID": "AEGIS-GITHUB-HOMEPAGE",
+  "Title": "Aegis Win11 Enterprise Deployment Toolkit",
+  "Version": "1.8.1",
+  "ReleaseDate": "2026-10-14",
+  "Classification": "Declassified Internal Engineering Documentation",
+  "TargetOS": "Windows 11 Enterprise / Pro (24H2, 26H2)",
+  "BaselineMatrix": "54-Item Monolithic Architecture",
+  "CompensatingControls": "DEV-01 through DEV-09",
+  "ComplianceStandards": [
+    "CIS Windows 11 Enterprise Benchmark v3.0.0",
+    "NIST SP 800-53 Rev 5",
+    "DoD DISA Windows 11 STIG",
+    "ACSC Essential Eight"
+  ],
+  "Maintainer": "Damien John O'Brien / Moosehead Studio"
+}
+-->
 
 <p align="center">
   <img src="assets/aegis-crystal-floor.png" alt="Aegis Win11 Logo" width="480" />
@@ -28,9 +42,12 @@ AEGIS-METADATA:END -->
   <a href="autounattend.xml">
     <img src="https://img.shields.io/badge/Arch-x64%20%2F%20AMD64-334155?style=for-the-badge&labelColor=1E293B" alt="Architecture x64" /></a>
 </p>
+
 ---
+
 <!-- AEGIS-REVISION-MATRIX:START -->
 <!-- AEGIS-REVISION-MATRIX:END -->
+
 ---
 
 <details>
@@ -56,12 +73,19 @@ Aegis Win11 is an automated, unattended provisioning pipeline engineered to repl
 
 Standard OS stripping scripts regularly induce system failures by severing mandatory networking components (such as unbinding IPv6), degrading process boundaries (grouping svchost.exe instances to claim trivial memory reductions), disabling system memory paging mechanisms, or injecting unvalidated storage driver overrides. Aegis Win11 isolates telemetry, minimizes persistence vectors, and enforces Microsoft Defender Application Control (WDAC) driver blocklists while explicitly maintaining hardware abstraction layers, low-latency audio pipelines, and enterprise identity integration.
 
+
+
+
+_Aegis-Win11 implements a five-tier enterprise architecture covering deterministic storage, hardware-bound identity, kernel protection, network hardening, and workload lifecycle management._
+
+**[View the Enterprise Architecture & Technical Reference →](docs/wiki/Technical-Reference-Manual.md)**
+
 ---
 
 ## 2. Systems Architecture Blueprint
 
 <p align="center">
-  <img src="assets/aegis-architecture-flow.png" alt="Aegis Win11 Systems Architecture" width="100%" />
+  <img src="https://raw.githubusercontent.com/narcarsiss/Aegis-Win11/main/assets/aegis-architecture-flow.png" alt="Aegis Win11 Systems Architecture" width="100%" />
 </p>
 
 ---
@@ -118,21 +142,18 @@ Deployment occurs across three discrete execution boundaries coordinated through
 
 ```
 INSTALLER_USB:
-└───autounattend.xml                           # Unattended answer file (4Kn, WinPE, specialize, OOBE)
-├── Post-FeatureUpdate-Compare-AegisBase.ps1   # Post-upgrade drift audit & remediation utility
+└───autounattend.xml
 └───sources
     └───$OEM$
         └───$1
             └───Aegis
-                └───AegisWin11_Deploy.ps1      # Post-OOBE orchestrator script
+                └───AegisWin11_Deploy.ps1
 ```
-</details>  
+</details>
 
----
 > [!WARNING]  
 > Deploying `autounattend.xml` with automated disk partitioning (`WipeDisk=true`) destroys all existing volume data on Disk 0. Ensure target machine data is backed up and BitLocker recovery keys are escrowed before boot media execution.
-> Ensure the target installation drive enumerates as Disk 0 in the UEFI BIOS prior to boot.
-> or disconnect/disable secondary SATA/AHCI drives upon initial staging.
+> Ensure the target installation drive enumerates as Disk 0 in the UEFI BIOS prior to boot, or disconnect/disable secondary SATA/AHCI drives upon initial staging.
   
 ---
 
@@ -172,7 +193,7 @@ INSTALLER_USB:
 ### Hardware Identity Engine
 The framework dynamically provisions a unique, hardware-bound administrative anchor during installation:
 1.  Queries `Win32_Bios.SerialNumber`. If non-standard, queries `Win32_ComputerSystemProduct.UUID` and hashes the output via SHA-256 to create a 6-character identifier (`$StickerID`).
-2.  Provisions `Aegis$StickerID` with a 24-character cryptographic password generated at runtime via `.NET` entropy (`RandomNumberGenerator`), strictly adhering to SAM 20-character boundaries.
+2.  Provisions `Aegis$StickerID` with a 24-character cryptographic password generated at runtime via `System.Security.Cryptography.RandomNumberGenerator`, strictly complying with NetBIOS and SAM 20-character account ceilings.
 3.  Enforces an immediate credential reset upon first interactive console login (`net user ... /logonpasswordchg:yes`).
 4.  Exports the secret to `C:\Windows\Panther\Aegis_Bootstrap_Secret.txt` under strict ACL permissions restricted to `SYSTEM` and `Administrators`, then disables the built-in `Administrator` account (`SID S-1-5-500`).
 
@@ -191,11 +212,7 @@ Aegis Win11 rejects blanket wildcard AppX removal scripts (`Get-AppxPackage | Re
 The framework enforces an explicit, non-destructive consumer blacklist targeting third-party and non-essential consumer stubs (BingNews, BingWeather, Clipchamp, Solitaire, Zune Video, Todos). Both installed instances and online provisioned stubs (`Get-AppxProvisionedPackage`) are uninstalled, preventing re-provisioning on secondary local user profiles while keeping system dependencies intact.
 
 ### Targeted Desktop Audit & Logs Delivery
-1. `Aegis_Deployment_Report.txt`: Full text log detailing pass/fail posture across all baseline settings.
-2. `Aegis_Deploy.json`: Machine-readable telemetry log serialized directly from pipeline execution memory.
-3. `Deployment_Logs.lnk`: Desktop shortcut resolving directly to the local staging directory (`C:\Windows\Panther\`).
-4. `Post-FeatureUpdate-Compare-AegisBase.ps1`: Companion drift auditing utility allowing administrators to detect and remediate policy reversion after major Windows updates.
-A post-install first-logon dispatcher (`Aegis_PostLogon_Cleanup.ps1`) transfers these files directly onto the created administrator's desktop (`Aegis$StickerID`), ensuring full visibility while keeping public and unprivileged desktops clean.
+The deployment report (`Aegis_Deployment_Report.txt`), the machine-readable telemetry log (`Aegis_Deploy.json`), the formal audit manifest (`Aegis_Compensating_Controls.json`), and a direct shortcut to `C:\Windows\Panther` (`Deployment_Logs.lnk`) are generated during finalization and staged in the Panther vault. A post-install first-logon dispatcher (`Aegis_PostLogon_Cleanup.ps1`) transfers these files directly onto the created administrator's desktop (`Aegis$StickerID`), ensuring full visibility while keeping public and unprivileged desktops clean.
 </details>
   
 ---
@@ -266,4 +283,5 @@ Get-Content -Path "C:\Windows\Panther\Aegis_Compensating_Controls.json" | Conver
 
 <a id="10-license"></a>
 ## 10. License
+
 Released by Moosehead Studio under the MIT License. See `LICENSE` for details.
